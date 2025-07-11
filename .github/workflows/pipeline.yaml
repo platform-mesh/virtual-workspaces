@@ -19,3 +19,5 @@ jobs:
       imageTagName: ghcr.io/platform-mesh/virtual-workspaces
       repoVersionUpdate: platform-mesh/helm-charts
       coverageThresholdTotal: 0
+      coverageThresholdFile: 0
+      coverageThresholdPackage: 0

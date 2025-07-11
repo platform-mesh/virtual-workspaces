@@ -21,6 +21,20 @@ import (
 	genericapirequest "k8s.io/apiserver/pkg/endpoints/request"
 )
 
+type clusterPathKey struct{}
+
+func WithClusterPath(ctx context.Context, path logicalcluster.Path) context.Context {
+	return context.WithValue(ctx, clusterPathKey{}, path)
+}
+
+func ClusterPathFrom(ctx context.Context) (logicalcluster.Path, bool) {
+	path, ok := ctx.Value(clusterPathKey{}).(logicalcluster.Path)
+	if !ok {
+		return logicalcluster.Path{}, false
+	}
+	return path, true
+}
+
 func Marketplace(client dynamic.ClusterInterface, cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 	return forwardingregistry.StorageWrapperFunc(func(resource schema.GroupResource, storage *forwardingregistry.StoreFuncs) {
 		delegateLister := storage.ListerFunc
@@ -34,7 +48,10 @@ func Marketplace(client dynamic.ClusterInterface, cfg config.ServiceConfig) forw
 
 			ul, _ := result.(*unstructured.UnstructuredList)
 
-			path := ctx.Value("clusterPath").(logicalcluster.Path)
+			path, ok := ClusterPathFrom(ctx)
+			if !ok {
+				return nil, kerrors.NewBadRequest("cluster path not found in context")
+			}
 
 			apiBindings, err := client.Cluster(path).Resource(schema.GroupVersionResource{
 				Group:    "apis.kcp.io",
