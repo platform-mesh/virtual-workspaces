@@ -131,7 +131,7 @@ func newPathResolver(clusterResolver proxy.ClusterResolver, virtualWorkspaceBase
 
 		}
 
-		completedContext = context.WithValue(requestContext, "clusterPath", path)
+		completedContext = context.WithValue(requestContext, "clusterPath", path) // TODO: change to proper context key
 		completedContext = genericapirequest.WithCluster(completedContext, cluster)
 
 		// Inject a dummy object into the context which later is filled with real

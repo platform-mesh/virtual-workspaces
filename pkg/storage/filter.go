@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"strings"
 
 	"github.com/kcp-dev/client-go/dynamic"
 	"github.com/kcp-dev/kcp/pkg/virtual/framework/forwardingregistry"
@@ -14,6 +15,8 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+
+	kerrors "k8s.io/apimachinery/pkg/api/errors"
 
 	genericapirequest "k8s.io/apiserver/pkg/endpoints/request"
 )
@@ -42,9 +45,14 @@ func Marketplace(client dynamic.ClusterInterface, cfg config.ServiceConfig) forw
 				return nil, err
 			}
 
-			entityType := "account" // TODO: infer correct entity type
+			parentPath, _ := path.Parent()
 
-			apiBindings.EachListItem(func(o runtime.Object) error {
+			entityType := "account"
+			if strings.HasSuffix(parentPath.String(), "orgs") {
+				entityType = "main"
+			}
+
+			err = apiBindings.EachListItem(func(o runtime.Object) error {
 				binding := o.(*unstructured.Unstructured)
 
 				apiExportName, ok, err := unstructured.NestedString(binding.Object, "spec", "reference", "export", "name")
@@ -68,6 +76,10 @@ func Marketplace(client dynamic.ClusterInterface, cfg config.ServiceConfig) forw
 				})
 
 				apiExportCCs, err := delegateLister.List(exportCtx, exportOpts)
+				if kerrors.IsNotFound(err) {
+					return nil
+				}
+
 				if err != nil {
 					return err
 				}
@@ -76,6 +88,9 @@ func Marketplace(client dynamic.ClusterInterface, cfg config.ServiceConfig) forw
 
 				return nil
 			})
+			if err != nil {
+				return nil, err
+			}
 
 			providerCtx := genericapirequest.WithCluster(ctx, genericapirequest.Cluster{
 				Name: logicalcluster.Name(cfg.ProviderWorkspaceID),
