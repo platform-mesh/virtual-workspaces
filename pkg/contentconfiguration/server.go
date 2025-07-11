@@ -22,7 +22,6 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/apiserver/pkg/endpoints/request"
 	genericapirequest "k8s.io/apiserver/pkg/endpoints/request"
 	genericapiserver "k8s.io/apiserver/pkg/server"
 )
@@ -118,7 +117,7 @@ func newPathResolver(clusterResolver proxy.ClusterResolver, virtualWorkspaceBase
 		// setup cluster in completed context
 		var cluster genericapirequest.Cluster
 		if path == logicalcluster.Wildcard {
-			cluster = request.Cluster{
+			cluster = genericapirequest.Cluster{
 				PartialMetadataRequest: filters.IsPartialMetadataRequest(requestContext),
 				Wildcard:               true,
 			}

@@ -22,7 +22,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	v := viper.NewWithOptions(
+	v = viper.NewWithOptions(
 		viper.EnvKeyReplacer(strings.NewReplacer("-", "_")),
 	)
 
