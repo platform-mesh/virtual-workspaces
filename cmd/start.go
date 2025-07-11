@@ -25,6 +25,10 @@ var startCmd = &cobra.Command{
 			return err
 		}
 
+		if cfg.ServerURL != "" {
+			clientCfg.Host = cfg.ServerURL
+		}
+
 		dynamicClient, err := dynamic.NewForConfig(clientCfg)
 		if err != nil {
 			return err

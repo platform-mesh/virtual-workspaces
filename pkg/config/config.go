@@ -15,6 +15,7 @@ import (
 type ServiceConfig struct {
 	ProviderWorkspaceID     string `mapstructure:"provider-workspace-id" default:"2pkfvpweuy7symvj"`
 	Kubeconfig              string `mapstructure:"kubeconfig"`
+	ServerURL               string `mapstructure:"server-url"`
 	EntityLabel             string `mapstructure:"entity-label" default:"ui.platform-mesh.ui/entity"`
 	ContentForLabel         string `mapstructure:"content-for-label" default:"ui.platform-mesh.io/content-for"`
 	ResourceSchemaName      string `mapstructure:"resource-schema-name" default:"v250704-6d57f16.contentconfigurations.core.openmfp.io"`
