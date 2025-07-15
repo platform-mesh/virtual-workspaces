@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/kcp-dev/client-go/dynamic"
+	kcpauthorization "github.com/kcp-dev/kcp/pkg/virtual/framework/authorization"
 	"github.com/platform-mesh/virtual-workspaces/pkg/contentconfiguration"
 	"github.com/spf13/cobra"
 
@@ -46,6 +47,11 @@ var startCmd = &cobra.Command{
 			return err
 		}
 
+		err = delegatingAuthenticationOption.ApplyTo(&recommendedConfig.Authentication, recommendedConfig.SecureServing, recommendedConfig.OpenAPIConfig)
+		if err != nil {
+			return err
+		}
+
 		rootAPIServerConfig, err := virtualrootapiserver.NewConfig(recommendedConfig)
 		if err != nil {
 			return err
@@ -54,6 +60,10 @@ var startCmd = &cobra.Command{
 		rootAPIServerConfig.Extra.VirtualWorkspaces = []virtualrootapiserver.NamedVirtualWorkspace{
 			contentconfiguration.BuildVirtualWorkspace(cfg, dynamicClient, clusterClient, contentconfiguration.VirtualWorkspaceBaseURL()),
 		}
+
+		rootAPIServerConfig.Generic.Authorization.Authorizer = kcpauthorization.NewVirtualWorkspaceAuthorizer(func() []virtualrootapiserver.NamedVirtualWorkspace {
+			return rootAPIServerConfig.Extra.VirtualWorkspaces
+		})
 
 		completedRootAPIServerConfig := rootAPIServerConfig.Complete()
 		rootAPIServer, err := virtualrootapiserver.NewServer(completedRootAPIServerConfig, genericapiserver.NewEmptyDelegate())

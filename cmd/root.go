@@ -11,9 +11,10 @@ import (
 )
 
 var (
-	v             *viper.Viper
-	cfg           config.ServiceConfig
-	secureServing = genericapiserveroptions.SecureServingOptions{}
+	v                              *viper.Viper
+	cfg                            config.ServiceConfig
+	secureServing                  = genericapiserveroptions.SecureServingOptions{}
+	delegatingAuthenticationOption = genericapiserveroptions.DelegatingAuthenticationOptions{}
 )
 
 var rootCmd = &cobra.Command{
@@ -35,6 +36,9 @@ func init() {
 		log.Fatalln(err)
 	}
 
+	delegatingAuthenticationOption = *genericapiserveroptions.NewDelegatingAuthenticationOptions()
+
+	delegatingAuthenticationOption.AddFlags(startCmd.Flags())
 	secureServing.AddFlags(startCmd.Flags())
 }
 
