@@ -15,6 +15,7 @@ import (
 	kcpclientset "github.com/kcp-dev/kcp/sdk/client/clientset/versioned/cluster"
 	"github.com/kcp-dev/logicalcluster/v3"
 	"github.com/platform-mesh/virtual-workspaces/pkg/apidefinition"
+	"github.com/platform-mesh/virtual-workspaces/pkg/authorization"
 	"github.com/platform-mesh/virtual-workspaces/pkg/config"
 	"github.com/platform-mesh/virtual-workspaces/pkg/proxy"
 	"github.com/platform-mesh/virtual-workspaces/pkg/storage"
@@ -22,6 +23,9 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/apiserver/pkg/authorization/authorizer"
+
 	genericapirequest "k8s.io/apiserver/pkg/endpoints/request"
 	genericapiserver "k8s.io/apiserver/pkg/server"
 )
@@ -45,8 +49,17 @@ func BuildVirtualWorkspace(
 		Name: Name,
 		VirtualWorkspace: &virtualworkspacesdynamic.DynamicVirtualWorkspace{
 			RootPathResolver: newPathResolver(clusterResolver, virtualWorkspaceBaseURL),
-			Authorizer:       nil, //TODO: implement at a later point
-			ReadyChecker:     framework.ReadyFunc(func() error { return nil }),
+			Authorizer: authorization.NewAttributesKeeper(
+				authorizer.AuthorizerFunc(func(ctx context.Context, a authorizer.Attributes) (authorizer.Decision, string, error) {
+					isAuthenticated := sets.New(a.GetUser().GetGroups()...).Has("system:authenticated")
+					if isAuthenticated {
+						return authorizer.DecisionAllow, "user is authenticated", nil
+					}
+
+					return authorizer.DecisionDeny, "user is not authenticated", nil
+				}), // TODO: we can think of a bit more complex authorization logic, e.g. doing some SAR, for now it is better than nothing
+			),
+			ReadyChecker: framework.ReadyFunc(func() error { return nil }),
 			BootstrapAPISetManagement: func(mainConfig genericapiserver.CompletedConfig) (kcpapidefinition.APIDefinitionSetGetter, error) {
 				rawResourceSchema, err := dynamicClient.Cluster(logicalcluster.NewPath(cfg.ResourceSchemaWorkspace)).Resource(schema.GroupVersionResource{
 					Group:    "apis.kcp.io",
@@ -136,7 +149,7 @@ func newPathResolver(clusterResolver proxy.ClusterResolver, virtualWorkspaceBase
 		// Inject a dummy object into the context which later is filled with real
 		// data during the authorization process; this allows two function side-by-side
 		// to share data in the same context.
-		// completedContext = authorization.WithAttributeHolder(completedContext)
+		completedContext = authorization.WithAttributeHolder(completedContext)
 
 		return true, strings.TrimSuffix(urlPath, realPath), completedContext
 	}

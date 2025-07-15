@@ -33,10 +33,15 @@ The Kubeconfigs server url needs to point to the **root** of the kcp instance (*
                 "--tls-cert-file=${workspaceFolder}/.secret/apiserver.crt",
                 "--tls-private-key-file=${workspaceFolder}/.secret/apiserver.key",
                 "--secure-port=6443",
-                "--bind-address=0.0.0.0"
+                "--bind-address=0.0.0.0",
+                "--authentication-kubeconfig=${workspaceFolder}/.secret/authentication.yaml",
+                "--client-ca-file=${workspaceFolder}/.secret/kcp-ca.crt",
+                "--authentication-skip-lookup"
             ],
             "envFile": "${workspaceFolder}/.env",
         }
     ]
 }
 ```
+
+The *authentication-kubeconfig* can be a copy of the kubeconfig file you use to access the kcp instance, but with the server-url pointing to the root clusters.
