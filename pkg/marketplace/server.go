@@ -72,6 +72,9 @@ func BuildVirtualWorkspace(
 				}
 
 				marketplaceFilter, err := storage.Marketplace(cfg)
+				if err != nil {
+					return nil, err
+				}
 
 				storeageProvider := storage.CreateStorageProviderFunc(
 					dynamicClient,
