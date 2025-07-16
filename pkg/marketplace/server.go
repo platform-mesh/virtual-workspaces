@@ -71,9 +71,11 @@ func BuildVirtualWorkspace(
 					return nil, err
 				}
 
+				marketplaceFilter, err := storage.Marketplace(cfg)
+
 				storeageProvider := storage.CreateStorageProviderFunc(
 					dynamicClient,
-					storage.Marketplace(cfg),
+					marketplaceFilter,
 				)
 
 				gvr := schema.GroupVersionResource{

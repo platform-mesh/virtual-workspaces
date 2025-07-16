@@ -11,13 +11,13 @@ import (
 type MarketplaceEntrySpec struct {
 
 	// Installed indicates whether the marketplace entry is currently installed in the account
-	Installed bool `json:"installed,omitempty"`
+	Installed bool `json:"installed"`
 
 	// ProviderMetadata contains metadata about the provider of the marketplace entry.
-	ProviderMetadata extensionapiv1alpha1.ProviderMetadataSpec `json:"providerMetadata,omitempty"`
+	ProviderMetadata extensionapiv1alpha1.ProviderMetadata `json:"providerMetadata"`
 
 	// PermissionClaims are the permission claims associated with the marketplace entry.
-	APIExport apisv1alpha1.APIExport `json:"apiExport,omitempty"`
+	APIExport apisv1alpha1.APIExport `json:"apiExport"`
 }
 
 // MarketplaceEntryStatus defines the observed state of MarketplaceEntry.

@@ -157,17 +157,15 @@ func setupVirtualWorkspaceClient(kubeconfigPath, serverURL, virtualWorkspacePath
 	return dynamic.NewForConfig(clientCfg)
 }
 
-func Marketplace(cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
+func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, error) {
 	providerMetadataClient, err := setupVirtualWorkspaceClient(cfg.Kubeconfig, cfg.ServerURL, cfg.ProviderMetadataVirtualWorkspacePath)
 	if err != nil {
-		// TODO: handle error properly
-		return nil
+		return nil, err
 	}
 
 	apiExportClient, err := setupVirtualWorkspaceClient(cfg.Kubeconfig, cfg.ServerURL, cfg.APIExportVirtualWorkspacePath)
 	if err != nil {
-		// TODO: handle error properly
-		return nil
+		return nil, err
 	}
 
 	return forwardingregistry.StorageWrapperFunc(func(resource schema.GroupResource, storage *forwardingregistry.StoreFuncs) {
@@ -182,18 +180,6 @@ func Marketplace(cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 			).List(ctx, metav1.ListOptions{})
 			if err != nil {
 				return nil, err
-			}
-
-			path, ok := ClusterPathFrom(ctx)
-			if !ok {
-				return nil, kerrors.NewBadRequest("cluster path not found in context")
-			}
-
-			parentPath, _ := path.Parent()
-
-			entityType := "account"
-			if strings.HasSuffix(parentPath.String(), "orgs") {
-				entityType = "main"
 			}
 
 			var results unstructured.UnstructuredList
@@ -216,7 +202,6 @@ func Marketplace(cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 				).List(ctx, metav1.ListOptions{
 					LabelSelector: labels.SelectorFromValidatedSet(map[string]string{
 						cfg.ContentForLabel: provider.GetName(),
-						cfg.EntityLabel:     entityType,
 					}).String(),
 				})
 				if err != nil {
@@ -235,7 +220,7 @@ func Marketplace(cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 							Name: export.Name,
 						},
 						Spec: v1alpha1.MarketplaceEntrySpec{
-							ProviderMetadata: *provider.Spec.DeepCopy(),
+							ProviderMetadata: *provider.DeepCopy(),
 							APIExport:        *export.DeepCopy(),
 							Installed:        false, // TODO: implement logic to determine if the entry is installed
 						},
@@ -261,5 +246,5 @@ func Marketplace(cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 
 			return &results, err
 		}
-	})
+	}), nil
 }
