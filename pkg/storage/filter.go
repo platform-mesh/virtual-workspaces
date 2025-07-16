@@ -15,7 +15,7 @@ import (
 	"github.com/platform-mesh/virtual-workspaces/pkg/config"
 
 	"k8s.io/apimachinery/pkg/apis/meta/internalversion"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -63,7 +63,7 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 				Group:    "apis.kcp.io",
 				Version:  "v1alpha1",
 				Resource: "apibindings",
-			}).List(ctx, v1.ListOptions{})
+			}).List(ctx, metav1.ListOptions{})
 			if err != nil {
 				return nil, err
 			}
@@ -175,11 +175,11 @@ func Marketplace(cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 
 			providers, err := providerMetadataClient.Cluster(logicalcluster.NewPath("*")).Resource(
 				schema.GroupVersionResource{
-					Group:    "core.openmfp.io",
-					Version:  "v1alpha1",
+					Group:    extensionapiv1alpha1.GroupVersion.Group,
+					Version:  extensionapiv1alpha1.GroupVersion.Version,
 					Resource: "providermetadatas",
 				},
-			).List(ctx, v1.ListOptions{})
+			).List(ctx, metav1.ListOptions{})
 			if err != nil {
 				return nil, err
 			}
@@ -196,7 +196,8 @@ func Marketplace(cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 				entityType = "main"
 			}
 
-			var results v1alpha1.MarketplaceEntryList
+			var results unstructured.UnstructuredList
+			results.SetGroupVersionKind(v1alpha1.GroupVersion.WithKind("MarketplaceEntryList"))
 
 			providers.EachListItem(func(o runtime.Object) error {
 
@@ -208,11 +209,11 @@ func Marketplace(cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 
 				rawExports, err := apiExportClient.Cluster(logicalcluster.NewPath("*")).Resource(
 					schema.GroupVersionResource{
-						Group:    "apis.kcp.io",
-						Version:  "v1alpha1",
+						Group:    apisv1alpha1.SchemeGroupVersion.Group,
+						Version:  apisv1alpha1.SchemeGroupVersion.Version,
 						Resource: "apiexports",
 					},
-				).List(ctx, v1.ListOptions{
+				).List(ctx, metav1.ListOptions{
 					LabelSelector: labels.SelectorFromValidatedSet(map[string]string{
 						cfg.ContentForLabel: provider.GetName(),
 						cfg.EntityLabel:     entityType,
@@ -222,20 +223,37 @@ func Marketplace(cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 					return err
 				}
 
-				var exports apisv1alpha1.APIExportList
-				err = runtime.DefaultUnstructuredConverter.FromUnstructured(rawExports.Object, &exports)
-				if err != nil {
-					return err
-				}
+				err = rawExports.EachListItem(func(o runtime.Object) error {
+					var export apisv1alpha1.APIExport
+					err = runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &export)
+					if err != nil {
+						return err
+					}
 
-				for _, export := range exports.Items {
-					results.Items = append(results.Items, v1alpha1.MarketplaceEntry{
+					entry := v1alpha1.MarketplaceEntry{
+						ObjectMeta: metav1.ObjectMeta{
+							Name: export.Name,
+						},
 						Spec: v1alpha1.MarketplaceEntrySpec{
 							ProviderMetadata: *provider.Spec.DeepCopy(),
 							APIExport:        *export.DeepCopy(),
 							Installed:        false, // TODO: implement logic to determine if the entry is installed
 						},
-					})
+					}
+
+					unstructuredEntry, err := runtime.DefaultUnstructuredConverter.ToUnstructured(&entry)
+					if err != nil {
+						return err
+					}
+
+					us := unstructured.Unstructured{Object: unstructuredEntry}
+					us.SetGroupVersionKind(v1alpha1.GroupVersion.WithKind("MarketplaceEntry"))
+					results.Items = append(results.Items, us)
+
+					return nil
+				})
+				if err != nil {
+					return err
 				}
 
 				return nil
