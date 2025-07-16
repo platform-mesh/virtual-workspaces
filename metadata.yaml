@@ -1,0 +1,7 @@
+apiVersion: core.openmfp.io/v1alpha1
+kind: ProviderMetadata
+metadata:
+  name: test-provider
+spec:
+  displayName: Test Provider
+  description: This is a test provider for demonstration purposes.
