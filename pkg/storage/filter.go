@@ -199,7 +199,7 @@ func Marketplace(cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 			var results unstructured.UnstructuredList
 			results.SetGroupVersionKind(v1alpha1.GroupVersion.WithKind("MarketplaceEntryList"))
 
-			providers.EachListItem(func(o runtime.Object) error {
+			err = providers.EachListItem(func(o runtime.Object) error {
 
 				var provider extensionapiv1alpha1.ProviderMetadata
 				err := runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &provider)
@@ -259,7 +259,7 @@ func Marketplace(cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 				return nil
 			})
 
-			return &results, nil
+			return &results, err
 		}
 	})
 }
