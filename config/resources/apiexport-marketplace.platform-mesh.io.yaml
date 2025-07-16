@@ -1,0 +1,9 @@
+apiVersion: apis.kcp.io/v1alpha1
+kind: APIExport
+metadata:
+  creationTimestamp: null
+  name: marketplace.platform-mesh.io
+spec:
+  latestResourceSchemas:
+  - v250716-5843a32.marketplaceentries.marketplace.platform-mesh.io
+status: {}

@@ -4,6 +4,7 @@ import (
 	"github.com/kcp-dev/client-go/dynamic"
 	kcpauthorization "github.com/kcp-dev/kcp/pkg/virtual/framework/authorization"
 	"github.com/platform-mesh/virtual-workspaces/pkg/contentconfiguration"
+	"github.com/platform-mesh/virtual-workspaces/pkg/marketplace"
 	"github.com/spf13/cobra"
 
 	"k8s.io/apimachinery/pkg/runtime/serializer"
@@ -29,6 +30,8 @@ var startCmd = &cobra.Command{
 		if cfg.ServerURL != "" {
 			clientCfg.Host = cfg.ServerURL
 		}
+
+		clientCfg.QPS = -1 // Disable rate limiting for the client
 
 		dynamicClient, err := dynamic.NewForConfig(clientCfg)
 		if err != nil {
@@ -59,6 +62,7 @@ var startCmd = &cobra.Command{
 
 		rootAPIServerConfig.Extra.VirtualWorkspaces = []virtualrootapiserver.NamedVirtualWorkspace{
 			contentconfiguration.BuildVirtualWorkspace(cfg, dynamicClient, clusterClient, contentconfiguration.VirtualWorkspaceBaseURL()),
+			marketplace.BuildVirtualWorkspace(cfg, dynamicClient, clusterClient, marketplace.VirtualWorkspaceBaseURL()),
 		}
 
 		rootAPIServerConfig.Generic.Authorization.Authorizer = kcpauthorization.NewVirtualWorkspaceAuthorizer(func() []virtualrootapiserver.NamedVirtualWorkspace {
