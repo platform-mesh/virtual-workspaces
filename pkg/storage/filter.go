@@ -2,19 +2,25 @@ package storage
 
 import (
 	"context"
+	"net/url"
+	"path"
 	"strings"
 
 	"github.com/kcp-dev/client-go/dynamic"
 	"github.com/kcp-dev/kcp/pkg/virtual/framework/forwardingregistry"
+	apisv1alpha1 "github.com/kcp-dev/kcp/sdk/apis/apis/v1alpha1"
 	"github.com/kcp-dev/logicalcluster/v3"
+	extensionapiv1alpha1 "github.com/openmfp/extension-manager-operator/api/v1alpha1"
+	"github.com/platform-mesh/virtual-workspaces/api/v1alpha1"
 	"github.com/platform-mesh/virtual-workspaces/pkg/config"
 
 	"k8s.io/apimachinery/pkg/apis/meta/internalversion"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/tools/clientcmd"
 
 	kerrors "k8s.io/apimachinery/pkg/api/errors"
 
@@ -35,7 +41,7 @@ func ClusterPathFrom(ctx context.Context) (logicalcluster.Path, bool) {
 	return path, true
 }
 
-func Marketplace(client dynamic.ClusterInterface, cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
+func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 	return forwardingregistry.StorageWrapperFunc(func(resource schema.GroupResource, storage *forwardingregistry.StoreFuncs) {
 		delegateLister := storage.ListerFunc
 		storage.ListerFunc = func(ctx context.Context, options *internalversion.ListOptions) (runtime.Object, error) {
@@ -57,7 +63,7 @@ func Marketplace(client dynamic.ClusterInterface, cfg config.ServiceConfig) forw
 				Group:    "apis.kcp.io",
 				Version:  "v1alpha1",
 				Resource: "apibindings",
-			}).List(ctx, v1.ListOptions{})
+			}).List(ctx, metav1.ListOptions{})
 			if err != nil {
 				return nil, err
 			}
@@ -128,4 +134,117 @@ func Marketplace(client dynamic.ClusterInterface, cfg config.ServiceConfig) forw
 			return ul, nil
 		}
 	})
+}
+
+func setupVirtualWorkspaceClient(kubeconfigPath, serverURL, virtualWorkspacePath string) (*dynamic.ClusterClientset, error) {
+	clientCfg, err := clientcmd.BuildConfigFromFlags("", kubeconfigPath)
+	if err != nil {
+		return nil, err
+	}
+
+	clientCfg.QPS = -1 // Disable rate limiting for the client
+
+	if serverURL != "" {
+		clientCfg.Host = serverURL
+	}
+
+	parsed, _ := url.Parse(clientCfg.Host)
+	pathSegments := strings.Split(virtualWorkspacePath, "/")
+	parsed.Path = path.Join(pathSegments...)
+
+	clientCfg.Host = parsed.String()
+
+	return dynamic.NewForConfig(clientCfg)
+}
+
+func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, error) {
+	providerMetadataClient, err := setupVirtualWorkspaceClient(cfg.Kubeconfig, cfg.ServerURL, cfg.ProviderMetadataVirtualWorkspacePath)
+	if err != nil {
+		return nil, err
+	}
+
+	apiExportClient, err := setupVirtualWorkspaceClient(cfg.Kubeconfig, cfg.ServerURL, cfg.APIExportVirtualWorkspacePath)
+	if err != nil {
+		return nil, err
+	}
+
+	return forwardingregistry.StorageWrapperFunc(func(resource schema.GroupResource, storage *forwardingregistry.StoreFuncs) {
+		storage.ListerFunc = func(ctx context.Context, options *internalversion.ListOptions) (runtime.Object, error) {
+
+			providers, err := providerMetadataClient.Cluster(logicalcluster.NewPath("*")).Resource(
+				schema.GroupVersionResource{
+					Group:    extensionapiv1alpha1.GroupVersion.Group,
+					Version:  extensionapiv1alpha1.GroupVersion.Version,
+					Resource: "providermetadatas",
+				},
+			).List(ctx, metav1.ListOptions{})
+			if err != nil {
+				return nil, err
+			}
+
+			var results unstructured.UnstructuredList
+			results.SetGroupVersionKind(v1alpha1.GroupVersion.WithKind("MarketplaceEntryList"))
+
+			err = providers.EachListItem(func(o runtime.Object) error {
+
+				var provider extensionapiv1alpha1.ProviderMetadata
+				err := runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &provider)
+				if err != nil {
+					return err
+				}
+
+				rawExports, err := apiExportClient.Cluster(logicalcluster.NewPath("*")).Resource(
+					schema.GroupVersionResource{
+						Group:    apisv1alpha1.SchemeGroupVersion.Group,
+						Version:  apisv1alpha1.SchemeGroupVersion.Version,
+						Resource: "apiexports",
+					},
+				).List(ctx, metav1.ListOptions{
+					LabelSelector: labels.SelectorFromValidatedSet(map[string]string{
+						cfg.ContentForLabel: provider.GetName(),
+					}).String(),
+				})
+				if err != nil {
+					return err
+				}
+
+				err = rawExports.EachListItem(func(o runtime.Object) error {
+					var export apisv1alpha1.APIExport
+					err = runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &export)
+					if err != nil {
+						return err
+					}
+
+					entry := v1alpha1.MarketplaceEntry{
+						ObjectMeta: metav1.ObjectMeta{
+							Name: export.Name,
+						},
+						Spec: v1alpha1.MarketplaceEntrySpec{
+							ProviderMetadata: *provider.DeepCopy(),
+							APIExport:        *export.DeepCopy(),
+							Installed:        false, // TODO: implement logic to determine if the entry is installed
+						},
+					}
+
+					unstructuredEntry, err := runtime.DefaultUnstructuredConverter.ToUnstructured(&entry)
+					if err != nil {
+						return err
+					}
+
+					us := unstructured.Unstructured{Object: unstructuredEntry}
+					us.SetGroupVersionKind(v1alpha1.GroupVersion.WithKind("MarketplaceEntry"))
+					results.Items = append(results.Items, us)
+
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+
+				return nil
+			})
+
+			return &results, err
+		}
+	}), nil
 }

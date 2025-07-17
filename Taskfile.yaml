@@ -1,0 +1,36 @@
+version: "3"
+
+vars:
+  LOCAL_BIN: bin
+  CONTROLLER_TOOLS_VERSION: v0.18.0
+  ENVTEST_K8S_VERSION: "1.31.0"
+  ENVTEST_VERSION: release-0.19
+  CRD_DIRECTORY: config/crd/bases
+  KCP_APIGEN_VERSION: v0.27.1
+  GOARCH:
+    sh: go env GOARCH
+  GOOS:
+    sh: go env GOOS
+tasks:
+  default:
+    cmds:
+      - task --list-all
+  ## Setup
+  setup:controller-gen:
+    internal: true
+    cmds:
+      - test -s {{.LOCAL_BIN}}/controller-gen || GOBIN=$(pwd)/{{.LOCAL_BIN}} go install sigs.k8s.io/controller-tools/cmd/controller-gen@{{.CONTROLLER_TOOLS_VERSION}}
+  setup:kcp-api-gen:
+    internal: true
+    cmds:
+      - test -s {{.LOCAL_BIN}}/apigen || GOBIN=$(pwd)/{{.LOCAL_BIN}} go install github.com/kcp-dev/kcp/sdk/cmd/apigen@{{.KCP_APIGEN_VERSION}}
+  ## Development
+  manifests:
+    deps: [setup:controller-gen,setup:kcp-api-gen]
+    cmds:
+      - "{{.LOCAL_BIN}}/controller-gen crd paths=./... output:crd:artifacts:config={{.CRD_DIRECTORY}}"
+  generate:
+    cmds:
+      - task: manifests
+      - "{{.LOCAL_BIN}}/controller-gen object paths=./..."
+      - "{{.LOCAL_BIN}}/apigen --input-dir {{.CRD_DIRECTORY}} --output-dir ./config/resources"

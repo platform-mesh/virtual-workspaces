@@ -13,13 +13,17 @@ import (
 )
 
 type ServiceConfig struct {
-	ProviderWorkspaceID     string `mapstructure:"provider-workspace-id" default:"2pkfvpweuy7symvj"`
-	Kubeconfig              string `mapstructure:"kubeconfig"`
-	ServerURL               string `mapstructure:"server-url"`
-	EntityLabel             string `mapstructure:"entity-label" default:"ui.platform-mesh.ui/entity"`
-	ContentForLabel         string `mapstructure:"content-for-label" default:"ui.platform-mesh.io/content-for"`
+	ProviderWorkspaceID string `mapstructure:"provider-workspace-id" default:"2pkfvpweuy7symvj"`
+	Kubeconfig          string `mapstructure:"kubeconfig"`
+	ServerURL           string `mapstructure:"server-url"`
+	EntityLabel         string `mapstructure:"entity-label" default:"ui.platform-mesh.ui/entity"`
+	ContentForLabel     string `mapstructure:"content-for-label" default:"ui.platform-mesh.io/content-for"`
+
 	ResourceSchemaName      string `mapstructure:"resource-schema-name" default:"v250704-6d57f16.contentconfigurations.core.openmfp.io"`
 	ResourceSchemaWorkspace string `mapstructure:"resource-schema-workspace" default:"root:openmfp-system"`
+
+	ProviderMetadataVirtualWorkspacePath string `mapstructure:"provider-metadata-virtual-workspace-path" default:"/services/apiexport/2pkfvpweuy7symvj/core.openmfp.org"`
+	APIExportVirtualWorkspacePath        string `mapstructure:"apiexport-virtual-workspace-path" default:"/services/apiexport/2pkfvpweuy7symvj/kcp.io"`
 }
 
 // generateFlagSet generates a pflag.FlagSet from a struct based on its `mapstructure` tags.

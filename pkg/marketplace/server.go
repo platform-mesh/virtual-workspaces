@@ -1,7 +1,8 @@
-package contentconfiguration
+package marketplace
 
 import (
 	"context"
+	"os"
 	"path"
 
 	"github.com/kcp-dev/client-go/dynamic"
@@ -11,7 +12,6 @@ import (
 	virtualrootapiserver "github.com/kcp-dev/kcp/pkg/virtual/framework/rootapiserver"
 	apisv1alpha1 "github.com/kcp-dev/kcp/sdk/apis/apis/v1alpha1"
 	kcpclientset "github.com/kcp-dev/kcp/sdk/client/clientset/versioned/cluster"
-	"github.com/kcp-dev/logicalcluster/v3"
 	"github.com/platform-mesh/virtual-workspaces/pkg/apidefinition"
 	"github.com/platform-mesh/virtual-workspaces/pkg/authorization"
 	"github.com/platform-mesh/virtual-workspaces/pkg/config"
@@ -19,19 +19,18 @@ import (
 	"github.com/platform-mesh/virtual-workspaces/pkg/proxy"
 	"github.com/platform-mesh/virtual-workspaces/pkg/storage"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/apiserver/pkg/authorization/authorizer"
 
 	genericapiserver "k8s.io/apiserver/pkg/server"
 )
 
-var Name = "contentconfigurations"
+var Name = "marketplace"
 
 func VirtualWorkspaceBaseURL() string {
-	return path.Join("/services", "contentconfigurations")
+	return path.Join("/services", "marketplace")
 }
 
 func BuildVirtualWorkspace(
@@ -59,30 +58,33 @@ func BuildVirtualWorkspace(
 			),
 			ReadyChecker: framework.ReadyFunc(func() error { return nil }),
 			BootstrapAPISetManagement: func(mainConfig genericapiserver.CompletedConfig) (kcpapidefinition.APIDefinitionSetGetter, error) {
-				rawResourceSchema, err := dynamicClient.Cluster(logicalcluster.NewPath(cfg.ResourceSchemaWorkspace)).Resource(schema.GroupVersionResource{
-					Group:    "apis.kcp.io",
-					Version:  "v1alpha1",
-					Resource: "apiresourceschemas",
-				}).Get(context.TODO(), cfg.ResourceSchemaName, v1.GetOptions{})
+
+				var resourceSchema apisv1alpha1.APIResourceSchema
+
+				out, err := os.ReadFile("config/resources/apiresourceschema-marketplaceentries.marketplace.platform-mesh.io.yaml")
 				if err != nil {
 					return nil, err
 				}
 
-				var resourceSchema apisv1alpha1.APIResourceSchema
-				err = runtime.DefaultUnstructuredConverter.FromUnstructured(rawResourceSchema.Object, &resourceSchema)
+				err = yaml.Unmarshal(out, &resourceSchema)
+				if err != nil {
+					return nil, err
+				}
+
+				marketplaceFilter, err := storage.Marketplace(cfg)
 				if err != nil {
 					return nil, err
 				}
 
 				storeageProvider := storage.CreateStorageProviderFunc(
 					dynamicClient,
-					storage.ContentConfigurationLookup(dynamicClient, cfg),
+					marketplaceFilter,
 				)
 
 				gvr := schema.GroupVersionResource{
-					Group:    "core.openmfp.io",
-					Version:  "v1alpha1",
-					Resource: "contentconfigurations",
+					Group:    resourceSchema.Spec.Group,
+					Version:  resourceSchema.Spec.Versions[0].Name,
+					Resource: resourceSchema.Spec.Names.Plural,
 				}
 
 				return apidefinition.NewSingleResourceProvider(mainConfig, gvr, &resourceSchema, storeageProvider), nil
