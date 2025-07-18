@@ -2,7 +2,6 @@ package marketplace
 
 import (
 	"context"
-	"os"
 	"path"
 
 	"github.com/kcp-dev/client-go/dynamic"
@@ -12,6 +11,7 @@ import (
 	virtualrootapiserver "github.com/kcp-dev/kcp/pkg/virtual/framework/rootapiserver"
 	apisv1alpha1 "github.com/kcp-dev/kcp/sdk/apis/apis/v1alpha1"
 	kcpclientset "github.com/kcp-dev/kcp/sdk/client/clientset/versioned/cluster"
+	"github.com/platform-mesh/virtual-workspaces/config/resources"
 	"github.com/platform-mesh/virtual-workspaces/pkg/apidefinition"
 	"github.com/platform-mesh/virtual-workspaces/pkg/authorization"
 	"github.com/platform-mesh/virtual-workspaces/pkg/config"
@@ -60,13 +60,7 @@ func BuildVirtualWorkspace(
 			BootstrapAPISetManagement: func(mainConfig genericapiserver.CompletedConfig) (kcpapidefinition.APIDefinitionSetGetter, error) {
 
 				var resourceSchema apisv1alpha1.APIResourceSchema
-
-				out, err := os.ReadFile("config/resources/apiresourceschema-marketplaceentries.marketplace.platform-mesh.io.yaml")
-				if err != nil {
-					return nil, err
-				}
-
-				err = yaml.Unmarshal(out, &resourceSchema)
+				err := yaml.Unmarshal([]byte(resources.ResourceSchema), &resourceSchema)
 				if err != nil {
 					return nil, err
 				}

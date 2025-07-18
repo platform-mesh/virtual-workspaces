@@ -22,7 +22,7 @@ type ServiceConfig struct {
 	ResourceSchemaName      string `mapstructure:"resource-schema-name" default:"v250704-6d57f16.contentconfigurations.core.openmfp.io"`
 	ResourceSchemaWorkspace string `mapstructure:"resource-schema-workspace" default:"root:openmfp-system"`
 
-	ProviderMetadataVirtualWorkspacePath string `mapstructure:"provider-metadata-virtual-workspace-path" default:"/services/apiexport/2pkfvpweuy7symvj/core.openmfp.org"`
+	ProviderMetadataVirtualWorkspacePath string `mapstructure:"provider-metadata-virtual-workspace-path" default:"/services/apiexport/2pkfvpweuy7symvj/core.platform-mesh.io"`
 	APIExportVirtualWorkspacePath        string `mapstructure:"apiexport-virtual-workspace-path" default:"/services/apiexport/2pkfvpweuy7symvj/kcp.io"`
 }
 
