@@ -18,6 +18,7 @@ COPY main.go main.go
 COPY cmd/ cmd/
 COPY pkg/ pkg/
 COPY api/ api/
+COPY config/resources config/resources
 
 # Build
 
