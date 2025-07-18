@@ -32,6 +32,7 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o vi
 FROM gcr.io/distroless/static:nonroot
 WORKDIR /
 COPY --from=builder /workspace/virtual-workspaces .
+COPY config/resources /config/resources
 USER 65532:65532
 
 ENTRYPOINT ["/virtual-workspaces"]
