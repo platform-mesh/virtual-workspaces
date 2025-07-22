@@ -173,30 +173,20 @@ func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, e
 		storage.ListerFunc = func(ctx context.Context, options *internalversion.ListOptions) (runtime.Object, error) {
 
 			var installedAPIBindings apisv1alpha1.APIBindingList
-			// path, ok := ClusterPathFrom(ctx)
-			// if !ok {
-			// 	return nil, kerrors.NewBadRequest("cluster path not found in context")
-			// }
+			cluster := genericapirequest.ClusterFrom(ctx)
 
-			// FIXME: normally i would like to list using the apiexport client, but currently there is an authorization issue that prevents the request from succeeding
-			rawBindings, err := apiExportClient.Cluster(logicalcluster.NewPath("*")).
+			rawBindings, err := apiExportClient.Cluster(cluster.Name.Path()).
 				Resource(apisv1alpha1.SchemeGroupVersion.WithResource("apibindings")).
 				List(ctx, metav1.ListOptions{})
 			if err != nil {
 				return nil, err
 			}
 
-			cluster := genericapirequest.ClusterFrom(ctx)
-
 			err = rawBindings.EachListItem(func(o runtime.Object) error {
 				var binding apisv1alpha1.APIBinding
 				err := runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &binding)
 				if err != nil {
 					return err
-				}
-
-				if binding.Annotations["kcp.io/cluster"] != string(cluster.Name) {
-					return nil // Skip bindings not in the current path
 				}
 
 				installedAPIBindings.Items = append(installedAPIBindings.Items, binding)
