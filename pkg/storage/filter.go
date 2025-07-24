@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/url"
 	"path"
+	"slices"
 	"strings"
 
 	"github.com/kcp-dev/client-go/dynamic"
@@ -171,13 +172,33 @@ func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, e
 	return forwardingregistry.StorageWrapperFunc(func(resource schema.GroupResource, storage *forwardingregistry.StoreFuncs) {
 		storage.ListerFunc = func(ctx context.Context, options *internalversion.ListOptions) (runtime.Object, error) {
 
-			providers, err := providerMetadataClient.Cluster(logicalcluster.NewPath("*")).Resource(
-				schema.GroupVersionResource{
-					Group:    extensionapiv1alpha1.GroupVersion.Group,
-					Version:  extensionapiv1alpha1.GroupVersion.Version,
-					Resource: "providermetadatas",
-				},
-			).List(ctx, metav1.ListOptions{})
+			var installedAPIBindings apisv1alpha1.APIBindingList
+			cluster := genericapirequest.ClusterFrom(ctx)
+
+			rawBindings, err := apiExportClient.Cluster(cluster.Name.Path()).
+				Resource(apisv1alpha1.SchemeGroupVersion.WithResource("apibindings")).
+				List(ctx, metav1.ListOptions{})
+			if err != nil {
+				return nil, err
+			}
+
+			err = rawBindings.EachListItem(func(o runtime.Object) error {
+				var binding apisv1alpha1.APIBinding
+				err := runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &binding)
+				if err != nil {
+					return err
+				}
+
+				installedAPIBindings.Items = append(installedAPIBindings.Items, binding)
+				return nil
+			})
+			if err != nil {
+				return nil, err
+			}
+
+			providers, err := providerMetadataClient.Cluster(logicalcluster.NewPath("*")).
+				Resource(extensionapiv1alpha1.GroupVersion.WithResource("providermetadatas")).
+				List(ctx, metav1.ListOptions{})
 			if err != nil {
 				return nil, err
 			}
@@ -210,23 +231,26 @@ func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, e
 
 				err = rawExports.EachListItem(func(o runtime.Object) error {
 					var export apisv1alpha1.APIExport
-					err = runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &export)
+					err := runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &export)
 					if err != nil {
 						return err
 					}
 
-					entry := v1alpha1.MarketplaceEntry{
+					idx := slices.IndexFunc(installedAPIBindings.Items, func(item apisv1alpha1.APIBinding) bool {
+						return item.Spec.Reference.Export.Name == export.Name &&
+							item.Status.APIExportClusterName == export.Annotations["kcp.io/cluster"]
+					})
+
+					unstructuredEntry, err := runtime.DefaultUnstructuredConverter.ToUnstructured(&v1alpha1.MarketplaceEntry{
 						ObjectMeta: metav1.ObjectMeta{
 							Name: export.Name,
 						},
 						Spec: v1alpha1.MarketplaceEntrySpec{
 							ProviderMetadata: *provider.DeepCopy(),
 							APIExport:        *export.DeepCopy(),
-							Installed:        false, // TODO: implement logic to determine if the entry is installed
+							Installed:        idx != -1,
 						},
-					}
-
-					unstructuredEntry, err := runtime.DefaultUnstructuredConverter.ToUnstructured(&entry)
+					})
 					if err != nil {
 						return err
 					}
