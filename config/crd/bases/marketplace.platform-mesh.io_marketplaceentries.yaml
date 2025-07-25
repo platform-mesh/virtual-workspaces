@@ -342,11 +342,13 @@ spec:
                         properties:
                           url:
                             type: string
+                          name:
+                            type: string
                         type: object
                       helpCenterData:
                         items:
                           properties:
-                            URL:
+                            url:
                               type: string
                             displayName:
                               type: string
@@ -375,7 +377,7 @@ spec:
                       links:
                         items:
                           properties:
-                            URL:
+                            url:
                               type: string
                             displayName:
                               type: string
@@ -384,7 +386,7 @@ spec:
                       preferredSupportChannels:
                         items:
                           properties:
-                            URL:
+                            url:
                               type: string
                             displayName:
                               type: string
