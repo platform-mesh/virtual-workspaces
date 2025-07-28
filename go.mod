@@ -7,7 +7,7 @@ require (
 	github.com/kcp-dev/kcp v0.27.1
 	github.com/kcp-dev/kcp/sdk v0.27.1
 	github.com/kcp-dev/logicalcluster/v3 v3.0.5
-	github.com/openmfp/extension-manager-operator/api v0.141.1
+	github.com/openmfp/extension-manager-operator/api v0.142.0
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
 	github.com/spf13/viper v1.20.1

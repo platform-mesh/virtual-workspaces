@@ -192,6 +192,8 @@ github.com/opencontainers/selinux v1.11.0 h1:+5Zbo97w3Lbmb3PeqQtpmTkMwsW5nRI3YaL
 github.com/opencontainers/selinux v1.11.0/go.mod h1:E5dMC3VPuVvVHDYmi78qvhJp8+M586T4DlDRYpFkyec=
 github.com/openmfp/extension-manager-operator/api v0.141.1 h1:D20WsJZnuKM72xDQflnruyuaTvs6mnMwYH3C3bU/KsE=
 github.com/openmfp/extension-manager-operator/api v0.141.1/go.mod h1:RfkG0TMO2ZN4Pd0k433J0vK3BA9g2ogEKcZqjK8abIk=
+github.com/openmfp/extension-manager-operator/api v0.142.0 h1:intFbhz4fDzlxQvW23DuC90pGaBjo+iYC8T6OotcaQI=
+github.com/openmfp/extension-manager-operator/api v0.142.0/go.mod h1:RfkG0TMO2ZN4Pd0k433J0vK3BA9g2ogEKcZqjK8abIk=
 github.com/pelletier/go-toml/v2 v2.2.3 h1:YmeHyLY8mFWbdkNWwpr+qIL2bEqT0o95WSdkNHvL12M=
 github.com/pelletier/go-toml/v2 v2.2.3/go.mod h1:MfCQTFTvCcUyyvvwm1+G6H/jORL20Xlb6rzQu9GuUkc=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=

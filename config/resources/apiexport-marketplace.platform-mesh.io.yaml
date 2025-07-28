@@ -5,5 +5,5 @@ metadata:
   name: marketplace.platform-mesh.io
 spec:
   latestResourceSchemas:
-  - v250716-3b7eb09.marketplaceentries.marketplace.platform-mesh.io
+  - v250728-ac0c250.marketplaceentries.marketplace.platform-mesh.io
 status: {}

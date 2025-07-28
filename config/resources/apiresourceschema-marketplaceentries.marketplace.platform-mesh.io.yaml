@@ -2,7 +2,7 @@ apiVersion: apis.kcp.io/v1alpha1
 kind: APIResourceSchema
 metadata:
   creationTimestamp: null
-  name: v250716-3b7eb09.marketplaceentries.marketplace.platform-mesh.io
+  name: v250728-ac0c250.marketplaceentries.marketplace.platform-mesh.io
 spec:
   group: marketplace.platform-mesh.io
   names:
@@ -335,16 +335,20 @@ spec:
                     displayName:
                       type: string
                     documentation:
-                      properties:
-                        url:
-                          type: string
-                      type: object
+                      items:
+                        properties:
+                          displayName:
+                            type: string
+                          url:
+                            type: string
+                        type: object
+                      type: array
                     helpCenterData:
                       items:
                         properties:
-                          URL:
-                            type: string
                           displayName:
+                            type: string
+                          url:
                             type: string
                         type: object
                       type: array
@@ -371,18 +375,18 @@ spec:
                     links:
                       items:
                         properties:
-                          URL:
-                            type: string
                           displayName:
+                            type: string
+                          url:
                             type: string
                         type: object
                       type: array
                     preferredSupportChannels:
                       items:
                         properties:
-                          URL:
-                            type: string
                           displayName:
+                            type: string
+                          url:
                             type: string
                         type: object
                       type: array
