@@ -129,8 +129,8 @@ github.com/kcp-dev/kubernetes/staging/src/k8s.io/client-go v0.0.0-20250313100806
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/client-go v0.0.0-20250313100806-0011b8c72acd/go.mod h1:hWjhUQ4jSxubrrivD81cOQRDrxZk2OpPKEFfpaH20D8=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cloud-provider v0.0.0-20250313100806-0011b8c72acd h1:liTNh6DBV20v4sRPo9HrhzYPxIP1Vlkmt6gEytXM+VE=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cloud-provider v0.0.0-20250313100806-0011b8c72acd/go.mod h1:gZOjdyezmsTpq3hs5ShIQ207CTuelFLorjREdF1p3Mo=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20250313100806-0011b8c72acd h1:eGjL8ONysDlzqgNCI3JVXZNfFLu8tva6dBqECmraZmw=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20250313100806-0011b8c72acd/go.mod h1:PaofaNyAytQDzxTGLhEBS1rnHmjOvlBl78sYFnp/Acw=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20250425143807-ddbe171670d8 h1:C5mxX00SaWi7zcf5Q5VF7k14TkZPZVKVbDr5LQvqYfo=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20250425143807-ddbe171670d8/go.mod h1:Z11Rc4pK48bIRTI4rABKCWC8e69ulj1A1a7Xk99NzKM=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20250313100806-0011b8c72acd h1:VPXvUTcgY2JTW+G2S37WXuWm/HalCI+SrVDIZI/lVmY=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20250313100806-0011b8c72acd/go.mod h1:TZscgMDeUPK0CYClHZON05KJAZV0LXKImaqYf7TNgdE=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20250313100806-0011b8c72acd h1:DT0uuA2kRiiJH73SGDBurFH+NSN5MR1xkj5XtlPJDd8=
@@ -190,8 +190,6 @@ github.com/opencontainers/runtime-spec v1.0.3-0.20220909204839-494a5a6aca78 h1:R
 github.com/opencontainers/runtime-spec v1.0.3-0.20220909204839-494a5a6aca78/go.mod h1:jwyrGlmzljRJv/Fgzds9SsS/C5hL+LL3ko9hs6T5lQ0=
 github.com/opencontainers/selinux v1.11.0 h1:+5Zbo97w3Lbmb3PeqQtpmTkMwsW5nRI3YaLpt7tQ7oU=
 github.com/opencontainers/selinux v1.11.0/go.mod h1:E5dMC3VPuVvVHDYmi78qvhJp8+M586T4DlDRYpFkyec=
-github.com/openmfp/extension-manager-operator/api v0.141.1 h1:D20WsJZnuKM72xDQflnruyuaTvs6mnMwYH3C3bU/KsE=
-github.com/openmfp/extension-manager-operator/api v0.141.1/go.mod h1:RfkG0TMO2ZN4Pd0k433J0vK3BA9g2ogEKcZqjK8abIk=
 github.com/openmfp/extension-manager-operator/api v0.142.0 h1:intFbhz4fDzlxQvW23DuC90pGaBjo+iYC8T6OotcaQI=
 github.com/openmfp/extension-manager-operator/api v0.142.0/go.mod h1:RfkG0TMO2ZN4Pd0k433J0vK3BA9g2ogEKcZqjK8abIk=
 github.com/pelletier/go-toml/v2 v2.2.3 h1:YmeHyLY8mFWbdkNWwpr+qIL2bEqT0o95WSdkNHvL12M=
