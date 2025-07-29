@@ -133,8 +133,8 @@ github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-202504
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20250425143807-ddbe171670d8/go.mod h1:Z11Rc4pK48bIRTI4rABKCWC8e69ulj1A1a7Xk99NzKM=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20250425143807-ddbe171670d8 h1:RTbJLZz5uFWrTbcU1pNkw+CPx4N92ViCCNJAjTIy8uU=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20250425143807-ddbe171670d8/go.mod h1:4uO9ex4xRW9QVjZQOswehU5xL7wu2gzWMEUBb06EzWU=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20250313100806-0011b8c72acd h1:DT0uuA2kRiiJH73SGDBurFH+NSN5MR1xkj5XtlPJDd8=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20250313100806-0011b8c72acd/go.mod h1:xkb35jFzSPeIYUmJ6Zel/9YcXGkT43bKtYcxhZmOzZ8=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20250425143807-ddbe171670d8 h1:Fl07iAyBlZRuBVl5m7AJkl0wDYY9lfIYdIcuql4dJI4=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20250425143807-ddbe171670d8/go.mod h1:Vw0e0L1yi4FxO4zeIhBAAmVAmo31YKvq/g50TDkUFuk=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/controller-manager v0.0.0-20250313100806-0011b8c72acd h1:3jjU/4mr3wQgqZ3WCmXuEPL58nIpLjMwm3cSXIQ1tr4=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/controller-manager v0.0.0-20250313100806-0011b8c72acd/go.mod h1:omNtd+Q/oY/beVDrpIPhvqLMLLFKE6+fgIFCEwa4oyE=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-api v0.0.0-20250313100806-0011b8c72acd h1:geX4b/sPS0NA950lHhj8s/8vhZR5/mR3pg2gAdMegV4=
