@@ -137,8 +137,8 @@ github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-202504
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20250425143807-ddbe171670d8/go.mod h1:Vw0e0L1yi4FxO4zeIhBAAmVAmo31YKvq/g50TDkUFuk=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/controller-manager v0.0.0-20250313100806-0011b8c72acd h1:3jjU/4mr3wQgqZ3WCmXuEPL58nIpLjMwm3cSXIQ1tr4=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/controller-manager v0.0.0-20250313100806-0011b8c72acd/go.mod h1:omNtd+Q/oY/beVDrpIPhvqLMLLFKE6+fgIFCEwa4oyE=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-api v0.0.0-20250313100806-0011b8c72acd h1:geX4b/sPS0NA950lHhj8s/8vhZR5/mR3pg2gAdMegV4=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-api v0.0.0-20250313100806-0011b8c72acd/go.mod h1:e2pTb6psrP2AtdW24SxJaesf2402rQ0YjNa7qYssoi0=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-api v0.0.0-20250425143807-ddbe171670d8 h1:b9gdQSRqtFdw0w0XuHGh2Re1t1q3BdDWXiJTTYOU8Fw=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-api v0.0.0-20250425143807-ddbe171670d8/go.mod h1:LereSFVk0tgJOpVMfMVg/JWVrJWpKQYGcNTHM088cx8=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-client v0.0.0-20250313100806-0011b8c72acd h1:BdCqMnP8jkAVPIrVtQ1L+RemvGOm9S1Jqj/QIeDO4Go=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-client v0.0.0-20250313100806-0011b8c72acd/go.mod h1:OcFQ06bM5Hx/bM7qr+ifKWY46NaKIUOtmG75p4SKqV4=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/csi-translation-lib v0.0.0-20250313100806-0011b8c72acd h1:qs/52q0GNm6dJXXHbPa63Fe3wB9ekEXwPLbTeqUMowc=
