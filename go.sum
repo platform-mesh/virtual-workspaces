@@ -145,8 +145,8 @@ github.com/kcp-dev/kubernetes/staging/src/k8s.io/csi-translation-lib v0.0.0-2025
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/csi-translation-lib v0.0.0-20250425143807-ddbe171670d8/go.mod h1:5oLVB6UdAA4hPQusbQtnoOfbP7gmSNuVgtJzIeQICtg=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/dynamic-resource-allocation v0.0.0-20250313100806-0011b8c72acd h1:DeAiTaB9XHLClKWBtaViXkrSy/+Hx4A29k8EuhMtP+I=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/dynamic-resource-allocation v0.0.0-20250313100806-0011b8c72acd/go.mod h1:/Smd0D3LDuJb0pWFfOJ7GRQQ1DSp2uUXo46FoQn3R/U=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/kms v0.0.0-20250313100806-0011b8c72acd h1:Q3yOdqA0S2G3xpFRQEa/2IxBnngUhV12hE3+hSjPGyE=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/kms v0.0.0-20250313100806-0011b8c72acd/go.mod h1:gClzb5q8LLAagWlaL9S/rt8IcU3iY6gRARKN09DY4o8=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/kms v0.0.0-20250425143807-ddbe171670d8 h1:z3FDRYca6rhsyHmF8HbwrQ5JTUOygdwbzvGlFTi/MzI=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/kms v0.0.0-20250425143807-ddbe171670d8/go.mod h1:6c0fX+GV12dynYuruueesB5Emf9PwK+Jo/0UijPRhFk=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/kube-aggregator v0.0.0-20250313100806-0011b8c72acd h1:4//15kykqkUSD4Ve43/nyBd0IrOINttW2ILS4cwBVXc=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/kube-aggregator v0.0.0-20250313100806-0011b8c72acd/go.mod h1:MOwOOQXbWGsvpqwefyG+sGzGx2rVt4kBEg8MHioOo80=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/kubelet v0.0.0-20250313100806-0011b8c72acd h1:RB+2XF+U8215bFgZ5x4rnjcs4ZUKtNM9Xxzwx133A7U=
