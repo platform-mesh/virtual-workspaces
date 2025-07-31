@@ -60,7 +60,7 @@ require (
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/mailru/easyjson v0.9.0 // indirect
-	github.com/moby/spdystream v0.4.0 // indirect
+	github.com/moby/spdystream v0.5.0 // indirect
 	github.com/moby/sys/mountinfo v0.7.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
@@ -123,7 +123,7 @@ require (
 	k8s.io/api v0.33.3 // indirect
 	k8s.io/cloud-provider v0.0.0 // indirect
 	k8s.io/cluster-bootstrap v0.31.6 // indirect
-	k8s.io/component-base v0.31.6 // indirect
+	k8s.io/component-base v0.32.3 // indirect
 	k8s.io/component-helpers v0.31.6 // indirect
 	k8s.io/controller-manager v0.31.6 // indirect
 	k8s.io/dynamic-resource-allocation v0.31.6 // indirect
@@ -167,7 +167,7 @@ replace (
 	k8s.io/kube-proxy => github.com/kcp-dev/kubernetes/staging/src/k8s.io/kube-proxy v0.0.0-20250425143807-ddbe171670d8
 	k8s.io/kube-scheduler => github.com/kcp-dev/kubernetes/staging/src/k8s.io/kube-scheduler v0.0.0-20250425143807-ddbe171670d8
 	k8s.io/kubectl => github.com/kcp-dev/kubernetes/staging/src/k8s.io/kubectl v0.0.0-20250425143807-ddbe171670d8
-	k8s.io/kubelet => github.com/kcp-dev/kubernetes/staging/src/k8s.io/kubelet v0.0.0-20250313100806-0011b8c72acd
+	k8s.io/kubelet => github.com/kcp-dev/kubernetes/staging/src/k8s.io/kubelet v0.0.0-20250425143807-ddbe171670d8
 	k8s.io/kubernetes => github.com/kcp-dev/kubernetes v0.0.0-20250313100806-0011b8c72acd
 	k8s.io/metrics => github.com/kcp-dev/kubernetes/staging/src/k8s.io/metrics v0.0.0-20250313100806-0011b8c72acd
 	k8s.io/mount-utils => github.com/kcp-dev/kubernetes/staging/src/k8s.io/mount-utils v0.0.0-20250313100806-0011b8c72acd
