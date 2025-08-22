@@ -141,7 +141,7 @@ require (
 
 replace (
 	github.com/openmfp/extension-manager-operator v0.138.11 => ../../openmfp/extension-content-operator
-	k8s.io/api => github.com/kcp-dev/kubernetes/staging/src/k8s.io/api v0.0.0-20250313100806-0011b8c72acd
+	k8s.io/api => github.com/kcp-dev/kubernetes/staging/src/k8s.io/api ffe1d7c8649b
 	k8s.io/apiextensions-apiserver => github.com/kcp-dev/kubernetes/staging/src/k8s.io/apiextensions-apiserver v0.0.0-20250313100806-0011b8c72acd
 	k8s.io/apimachinery => github.com/kcp-dev/kubernetes/staging/src/k8s.io/apimachinery v0.0.0-20250313100806-0011b8c72acd
 	k8s.io/apiserver => github.com/kcp-dev/kubernetes/staging/src/k8s.io/apiserver v0.0.0-20250313100806-0011b8c72acd
