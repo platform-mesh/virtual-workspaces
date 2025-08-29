@@ -12,7 +12,7 @@ import (
 	"github.com/kcp-dev/kcp/pkg/virtual/framework/forwardingregistry"
 	apisv1alpha1 "github.com/kcp-dev/kcp/sdk/apis/apis/v1alpha1"
 	"github.com/kcp-dev/logicalcluster/v3"
-	extensionapiv1alpha1 "github.com/openmfp/extension-manager-operator/api/v1alpha1"
+	extensionapiv1alpha1 "github.com/platform-mesh/extension-manager-operator/api/v1alpha1"
 	"github.com/platform-mesh/virtual-workspaces/api/v1alpha1"
 	"github.com/platform-mesh/virtual-workspaces/pkg/config"
 
