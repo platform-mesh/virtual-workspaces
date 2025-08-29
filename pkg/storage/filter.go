@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 	"path"
 	"slices"
@@ -196,7 +197,7 @@ func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, e
 				return nil, err
 			}
 
-			providers, err := providerMetadataClient.Cluster(logicalcluster.NewPath("*")).
+			providers, err := providerMetadataClient.Cluster(logicalcluster.Wildcard).
 				Resource(extensionapiv1alpha1.GroupVersion.WithResource("providermetadatas")).
 				List(ctx, metav1.ListOptions{})
 			if err != nil {
@@ -214,7 +215,7 @@ func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, e
 					return err
 				}
 
-				rawExports, err := apiExportClient.Cluster(logicalcluster.NewPath("*")).Resource(
+				rawExports, err := apiExportClient.Cluster(logicalcluster.Wildcard).Resource(
 					schema.GroupVersionResource{
 						Group:    apisv1alpha1.SchemeGroupVersion.Group,
 						Version:  apisv1alpha1.SchemeGroupVersion.Version,
@@ -241,9 +242,12 @@ func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, e
 							item.Status.APIExportClusterName == export.Annotations["kcp.io/cluster"]
 					})
 
+					provider.ManagedFields = nil // clear managed fields to declutter the output
+					export.ManagedFields = nil
+
 					unstructuredEntry, err := runtime.DefaultUnstructuredConverter.ToUnstructured(&v1alpha1.MarketplaceEntry{
 						ObjectMeta: metav1.ObjectMeta{
-							Name: export.Name,
+							Name: fmt.Sprintf("%s-%s", export.Name, provider.Name), // TODO: we might need to fix the name length to not exceed the kubernetes limit
 						},
 						Spec: v1alpha1.MarketplaceEntrySpec{
 							ProviderMetadata: *provider.DeepCopy(),
