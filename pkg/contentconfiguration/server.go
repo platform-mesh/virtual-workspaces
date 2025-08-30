@@ -80,7 +80,7 @@ func BuildVirtualWorkspace(
 				)
 
 				gvr := schema.GroupVersionResource{
-					Group:    "core.openmfp.io",
+					Group:    "ui.platform-mesh.io",
 					Version:  "v1alpha1",
 					Resource: "contentconfigurations",
 				}
