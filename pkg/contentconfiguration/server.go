@@ -75,9 +75,14 @@ func BuildVirtualWorkspace(
 					return nil, err
 				}
 
+				providerWSCluster, err := clusterResolver(ctx, logicalcluster.NewPath(cfg.ResourceSchemaWorkspace))
+				if err != nil {
+					return nil, err
+				}
+
 				storeageProvider := storage.CreateStorageProviderFunc(
 					dynamicClient,
-					storage.ContentConfigurationLookup(dynamicClient, cfg),
+					storage.ContentConfigurationLookup(dynamicClient, cfg, providerWSCluster.Name.String()),
 				)
 
 				gvr := schema.GroupVersionResource{
