@@ -42,7 +42,8 @@ func ClusterPathFrom(ctx context.Context) (logicalcluster.Path, bool) {
 	return path, true
 }
 
-func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
+func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.ServiceConfig, providerWorkspaceID string) forwardingregistry.StorageWrapper {
+
 	return forwardingregistry.StorageWrapperFunc(func(resource schema.GroupResource, storage *forwardingregistry.StoreFuncs) {
 		delegateLister := storage.ListerFunc
 		storage.ListerFunc = func(ctx context.Context, options *internalversion.ListOptions) (runtime.Object, error) {
@@ -117,7 +118,7 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 			}
 
 			providerCtx := genericapirequest.WithCluster(ctx, genericapirequest.Cluster{
-				Name: logicalcluster.Name(cfg.ProviderWorkspaceID),
+				Name: logicalcluster.Name(providerWorkspaceID),
 			})
 
 			providerOpts := options.DeepCopy()
