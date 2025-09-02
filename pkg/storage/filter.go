@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"path"
 	"slices"
 	"strings"
 
@@ -138,7 +137,23 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 	})
 }
 
-func setupVirtualWorkspaceClient(kubeconfigPath, serverURL, virtualWorkspacePath string) (*dynamic.ClusterClientset, error) {
+func setupVirtualWorkspaceClient(ctx context.Context, dynamicClient dynamic.ClusterInterface, kubeconfigPath, serverURL, endpointSliceWorkspace, endpointSliceName string) (*dynamic.ClusterClientset, error) {
+
+	res, err := dynamicClient.Cluster(logicalcluster.NewPath(endpointSliceWorkspace)).Resource(schema.GroupVersionResource{
+		Group:    "apis.kcp.io",
+		Version:  "v1alpha1",
+		Resource: "apiexportendpointslices",
+	}).Get(ctx, endpointSliceName, metav1.GetOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	var eps apisv1alpha1.APIExportEndpointSlice
+	err = runtime.DefaultUnstructuredConverter.FromUnstructured(res.Object, &eps)
+	if err != nil {
+		return nil, err
+	}
+
 	clientCfg, err := clientcmd.BuildConfigFromFlags("", kubeconfigPath)
 	if err != nil {
 		return nil, err
@@ -150,22 +165,20 @@ func setupVirtualWorkspaceClient(kubeconfigPath, serverURL, virtualWorkspacePath
 		clientCfg.Host = serverURL
 	}
 
+	epsURL, _ := url.Parse(eps.Status.APIExportEndpoints[0].URL)
+
 	parsed, _ := url.Parse(clientCfg.Host)
-	pathSegments := strings.Split(virtualWorkspacePath, "/")
-	parsed.Path = path.Join(pathSegments...)
+	parsed.Path = epsURL.Path
 
 	clientCfg.Host = parsed.String()
+
+	fmt.Println("Using APIExportEndpointSlice URL:", clientCfg.Host)
 
 	return dynamic.NewForConfig(clientCfg)
 }
 
-func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, error) {
-	providerMetadataClient, err := setupVirtualWorkspaceClient(cfg.Kubeconfig, cfg.ServerURL, cfg.ProviderMetadataVirtualWorkspacePath)
-	if err != nil {
-		return nil, err
-	}
-
-	apiExportClient, err := setupVirtualWorkspaceClient(cfg.Kubeconfig, cfg.ServerURL, cfg.APIExportVirtualWorkspacePath)
+func Marketplace(ctx context.Context, cfg config.ServiceConfig, dynamicClient dynamic.ClusterInterface) (forwardingregistry.StorageWrapper, error) {
+	resourceClient, err := setupVirtualWorkspaceClient(ctx, dynamicClient, cfg.Kubeconfig, cfg.ServerURL, cfg.ResourceSchemaWorkspace, cfg.ResourceAPIExportEndpointSliceName)
 	if err != nil {
 		return nil, err
 	}
@@ -176,7 +189,7 @@ func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, e
 			var installedAPIBindings apisv1alpha1.APIBindingList
 			cluster := genericapirequest.ClusterFrom(ctx)
 
-			rawBindings, err := apiExportClient.Cluster(cluster.Name.Path()).
+			rawBindings, err := resourceClient.Cluster(cluster.Name.Path()).
 				Resource(apisv1alpha1.SchemeGroupVersion.WithResource("apibindings")).
 				List(ctx, metav1.ListOptions{})
 			if err != nil {
@@ -197,7 +210,7 @@ func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, e
 				return nil, err
 			}
 
-			providers, err := providerMetadataClient.Cluster(logicalcluster.Wildcard).
+			providers, err := resourceClient.Cluster(logicalcluster.Wildcard).
 				Resource(extensionapiv1alpha1.GroupVersion.WithResource("providermetadatas")).
 				List(ctx, metav1.ListOptions{})
 			if err != nil {
@@ -215,7 +228,7 @@ func Marketplace(cfg config.ServiceConfig) (forwardingregistry.StorageWrapper, e
 					return err
 				}
 
-				rawExports, err := apiExportClient.Cluster(logicalcluster.Wildcard).Resource(
+				rawExports, err := resourceClient.Cluster(logicalcluster.Wildcard).Resource(
 					schema.GroupVersionResource{
 						Group:    apisv1alpha1.SchemeGroupVersion.Group,
 						Version:  apisv1alpha1.SchemeGroupVersion.Version,

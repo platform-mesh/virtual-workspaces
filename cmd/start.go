@@ -60,9 +60,11 @@ var startCmd = &cobra.Command{
 			return err
 		}
 
+		ctx := cmd.Context()
+
 		rootAPIServerConfig.Extra.VirtualWorkspaces = []virtualrootapiserver.NamedVirtualWorkspace{
-			contentconfiguration.BuildVirtualWorkspace(cfg, dynamicClient, clusterClient, contentconfiguration.VirtualWorkspaceBaseURL()),
-			marketplace.BuildVirtualWorkspace(cfg, dynamicClient, clusterClient, marketplace.VirtualWorkspaceBaseURL()),
+			contentconfiguration.BuildVirtualWorkspace(ctx, cfg, dynamicClient, clusterClient, contentconfiguration.VirtualWorkspaceBaseURL()),
+			marketplace.BuildVirtualWorkspace(ctx, cfg, dynamicClient, clusterClient, marketplace.VirtualWorkspaceBaseURL()),
 		}
 
 		rootAPIServerConfig.Generic.Authorization.Authorizer = kcpauthorization.NewVirtualWorkspaceAuthorizer(func() []virtualrootapiserver.NamedVirtualWorkspace {
