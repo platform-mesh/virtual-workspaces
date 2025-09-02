@@ -65,7 +65,7 @@ func BuildVirtualWorkspace(
 					return nil, err
 				}
 
-				marketplaceFilter, err := storage.Marketplace(cfg)
+				marketplaceFilter, err := storage.Marketplace(cfg, dynamicClient)
 				if err != nil {
 					return nil, err
 				}
