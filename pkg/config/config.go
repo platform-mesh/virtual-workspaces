@@ -23,9 +23,6 @@ type ServiceConfig struct {
 	ResourceSchemaWorkspace string `mapstructure:"resource-schema-workspace" default:"root:openmfp-system"`
 
 	ResourceAPIExportEndpointSliceName string `mapstructure:"resource-apiexport-endpointslice-name"`
-
-	// ProviderMetadataVirtualWorkspacePath string `mapstructure:"provider-metadata-virtual-workspace-path" default:"/services/apiexport/2pkfvpweuy7symvj/core.platform-mesh.io"`
-	// APIExportVirtualWorkspacePath        string `mapstructure:"apiexport-virtual-workspace-path" default:"/services/apiexport/2pkfvpweuy7symvj/core.platform-mesh.io"`
 }
 
 // generateFlagSet generates a pflag.FlagSet from a struct based on its `mapstructure` tags.

@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"slices"
 	"strings"
+	"time"
 
 	"github.com/kcp-dev/client-go/dynamic"
 	"github.com/kcp-dev/kcp/pkg/virtual/framework/forwardingregistry"
@@ -139,11 +140,14 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 
 func setupVirtualWorkspaceClient(dynamicClient dynamic.ClusterInterface, kubeconfigPath, serverURL, endpointSliceWorkspace, endpointSliceName string) (*dynamic.ClusterClientset, error) {
 
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	res, err := dynamicClient.Cluster(logicalcluster.NewPath(endpointSliceWorkspace)).Resource(schema.GroupVersionResource{
 		Group:    "apis.kcp.io",
 		Version:  "v1alpha1",
 		Resource: "apiexportendpointslices",
-	}).Get(context.TODO(), endpointSliceName, metav1.GetOptions{})
+	}).Get(ctx, endpointSliceName, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
