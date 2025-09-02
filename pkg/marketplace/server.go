@@ -34,6 +34,7 @@ func VirtualWorkspaceBaseURL() string {
 }
 
 func BuildVirtualWorkspace(
+	ctx context.Context,
 	cfg config.ServiceConfig,
 	dynamicClient dynamic.ClusterInterface,
 	kcpClusterClient kcpclientset.ClusterInterface,
@@ -65,7 +66,7 @@ func BuildVirtualWorkspace(
 					return nil, err
 				}
 
-				marketplaceFilter, err := storage.Marketplace(cfg, dynamicClient)
+				marketplaceFilter, err := storage.Marketplace(ctx, cfg, dynamicClient)
 				if err != nil {
 					return nil, err
 				}

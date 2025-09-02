@@ -6,7 +6,6 @@ import (
 	"net/url"
 	"slices"
 	"strings"
-	"time"
 
 	"github.com/kcp-dev/client-go/dynamic"
 	"github.com/kcp-dev/kcp/pkg/virtual/framework/forwardingregistry"
@@ -138,10 +137,7 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 	})
 }
 
-func setupVirtualWorkspaceClient(dynamicClient dynamic.ClusterInterface, kubeconfigPath, serverURL, endpointSliceWorkspace, endpointSliceName string) (*dynamic.ClusterClientset, error) {
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+func setupVirtualWorkspaceClient(ctx context.Context, dynamicClient dynamic.ClusterInterface, kubeconfigPath, serverURL, endpointSliceWorkspace, endpointSliceName string) (*dynamic.ClusterClientset, error) {
 
 	res, err := dynamicClient.Cluster(logicalcluster.NewPath(endpointSliceWorkspace)).Resource(schema.GroupVersionResource{
 		Group:    "apis.kcp.io",
@@ -181,8 +177,8 @@ func setupVirtualWorkspaceClient(dynamicClient dynamic.ClusterInterface, kubecon
 	return dynamic.NewForConfig(clientCfg)
 }
 
-func Marketplace(cfg config.ServiceConfig, dynamicClient dynamic.ClusterInterface) (forwardingregistry.StorageWrapper, error) {
-	resourceClient, err := setupVirtualWorkspaceClient(dynamicClient, cfg.Kubeconfig, cfg.ServerURL, cfg.ResourceSchemaWorkspace, cfg.ResourceAPIExportEndpointSliceName)
+func Marketplace(ctx context.Context, cfg config.ServiceConfig, dynamicClient dynamic.ClusterInterface) (forwardingregistry.StorageWrapper, error) {
+	resourceClient, err := setupVirtualWorkspaceClient(ctx, dynamicClient, cfg.Kubeconfig, cfg.ServerURL, cfg.ResourceSchemaWorkspace, cfg.ResourceAPIExportEndpointSliceName)
 	if err != nil {
 		return nil, err
 	}

@@ -35,6 +35,7 @@ func VirtualWorkspaceBaseURL() string {
 }
 
 func BuildVirtualWorkspace(
+	ctx context.Context,
 	cfg config.ServiceConfig,
 	dynamicClient dynamic.ClusterInterface,
 	kcpClusterClient kcpclientset.ClusterInterface,
@@ -63,7 +64,7 @@ func BuildVirtualWorkspace(
 					Group:    "apis.kcp.io",
 					Version:  "v1alpha1",
 					Resource: "apiresourceschemas",
-				}).Get(context.TODO(), cfg.ResourceSchemaName, v1.GetOptions{})
+				}).Get(ctx, cfg.ResourceSchemaName, v1.GetOptions{})
 				if err != nil {
 					return nil, err
 				}
