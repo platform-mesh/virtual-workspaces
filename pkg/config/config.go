@@ -13,10 +13,12 @@ import (
 )
 
 type ServiceConfig struct {
-	Kubeconfig      string `mapstructure:"kubeconfig"`
-	ServerURL       string `mapstructure:"server-url"`
-	EntityLabel     string `mapstructure:"entity-label" default:"ui.platform-mesh.ui/entity"`
-	ContentForLabel string `mapstructure:"content-for-label" default:"ui.platform-mesh.io/content-for"`
+	Kubeconfig        string `mapstructure:"kubeconfig"`
+	ServerURL         string `mapstructure:"server-url"`
+	EntityLabel       string `mapstructure:"entity-label" default:"ui.platform-mesh.ui/entity"`
+	ContentForLabel   string `mapstructure:"content-for-label" default:"ui.platform-mesh.io/content-for"`
+	MainEntityName    string `mapstructure:"main-entity-name" default:"main"`
+	AccountEntityName string `mapstructure:"account-entity-name" default:"core_platform-mesh_io_account"`
 
 	ResourceSchemaName      string `mapstructure:"resource-schema-name" default:"v250704-6d57f16.contentconfigurations.ui.platform-mesh.io"`
 	ResourceSchemaWorkspace string `mapstructure:"resource-schema-workspace" default:"root:openmfp-system"`
