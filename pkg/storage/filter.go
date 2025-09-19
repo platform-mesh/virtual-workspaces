@@ -72,9 +72,9 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 
 			parentPath, _ := path.Parent()
 
-			entityType := "account"
+			entityType := cfg.AccountEntityName
 			if strings.HasSuffix(parentPath.String(), "orgs") {
-				entityType = "main"
+				entityType = cfg.MainEntityName
 			}
 
 			err = apiBindings.EachListItem(func(o runtime.Object) error {
