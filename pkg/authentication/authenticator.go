@@ -33,7 +33,9 @@ func New(restCfg *rest.Config) authenticator.Request {
 
 	return union.NewFailOnError(
 		WorkspaceAuthenticator,
-		bearertoken.New(OIDCAuthenticator(client, fmt.Sprintf("%s://%s", parsedURL.Scheme, parsedURL.Host))),
+		bearertoken.New(
+			OIDCAuthenticator(client, fmt.Sprintf("%s://%s", parsedURL.Scheme, parsedURL.Host)),
+		),
 	)
 }
 
