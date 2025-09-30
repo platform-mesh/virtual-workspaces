@@ -59,7 +59,6 @@ func OIDCAuthenticator(client *http.Client, baseURL string) authenticator.Token 
 		if err != nil {
 			return nil, false, err
 		}
-		defer res.Body.Close()
 
 		switch res.StatusCode {
 		case http.StatusOK, http.StatusCreated, http.StatusForbidden:
