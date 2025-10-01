@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"slices"
 	"strings"
 
 	"k8s.io/apiserver/pkg/authentication/authenticator"
@@ -84,7 +83,19 @@ type clusterPath struct{}
 var WorkspaceAuthenticator = authenticator.RequestFunc(func(req *http.Request) (*authenticator.Response, bool, error) {
 	segments := strings.Split(req.URL.Path, "/")
 
-	idx := slices.Index(segments, "clusters")
+	idx := -1
+	for i, segment := range segments {
+		if segment != "clusters" {
+			continue
+		}
+
+		if idx > -1 {
+			return &authenticator.Response{}, false, fmt.Errorf("malformed request URL %q", req.URL.Path)
+		}
+
+		idx = i
+	}
+
 	if idx == -1 || idx+1 >= len(segments) {
 		return &authenticator.Response{}, false, fmt.Errorf("no cluster path in request URL %q", req.URL.Path)
 	}
