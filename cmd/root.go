@@ -1,13 +1,16 @@
 package cmd
 
 import (
+	"flag"
 	"log"
 	"strings"
 
 	"github.com/platform-mesh/virtual-workspaces/pkg/config"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	genericapiserveroptions "k8s.io/apiserver/pkg/server/options"
+	"k8s.io/klog/v2"
 )
 
 var (
@@ -40,8 +43,15 @@ func init() {
 
 	delegatingAuthenticationOption.AddFlags(startCmd.Flags())
 	secureServing.AddFlags(startCmd.Flags())
+
+	klogFlagSet := flag.NewFlagSet("klog", flag.ExitOnError)
+	klog.InitFlags(klogFlagSet)
+
+	pflag.CommandLine.AddGoFlagSet(klogFlagSet)
+	rootCmd.PersistentFlags().AddGoFlagSet(klogFlagSet)
 }
 
 func Execute() { // coverage-ignore
+	defer klog.Flush()
 	cobra.CheckErr(rootCmd.Execute())
 }

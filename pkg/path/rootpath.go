@@ -12,11 +12,13 @@ import (
 	"github.com/platform-mesh/virtual-workspaces/pkg/storage"
 
 	genericapirequest "k8s.io/apiserver/pkg/endpoints/request"
+	"k8s.io/klog/v2"
 )
 
 func NewPathResolver(clusterResolver proxy.ClusterResolver, virtualWorkspaceBaseURL string) framework.RootPathResolverFunc {
 	return func(urlPath string, requestContext context.Context) (accepted bool, prefixToStrip string, completedContext context.Context) {
 		// Supported URLs look like this: /services/service/clusters/<cluster>/api…
+		klog.V(8).InfoS("handling request in pathResolver", "urlPath", urlPath)
 
 		// Ignore anything that does not target this virtual workspace.
 		if !strings.HasPrefix(urlPath, virtualWorkspaceBaseURL) {

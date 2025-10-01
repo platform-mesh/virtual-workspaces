@@ -3,14 +3,17 @@ package cmd
 import (
 	"github.com/kcp-dev/client-go/dynamic"
 	kcpauthorization "github.com/kcp-dev/kcp/pkg/virtual/framework/authorization"
+	"github.com/spf13/cobra"
+
+	"github.com/platform-mesh/virtual-workspaces/pkg/authentication"
 	"github.com/platform-mesh/virtual-workspaces/pkg/contentconfiguration"
 	"github.com/platform-mesh/virtual-workspaces/pkg/marketplace"
-	"github.com/spf13/cobra"
 
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/clientcmd"
 
+	"k8s.io/apiserver/pkg/authentication/request/union"
 	genericapiserver "k8s.io/apiserver/pkg/server"
 
 	virtualrootapiserver "github.com/kcp-dev/kcp/pkg/virtual/framework/rootapiserver"
@@ -66,6 +69,11 @@ var startCmd = &cobra.Command{
 			contentconfiguration.BuildVirtualWorkspace(ctx, cfg, dynamicClient, clusterClient, contentconfiguration.VirtualWorkspaceBaseURL()),
 			marketplace.BuildVirtualWorkspace(ctx, cfg, dynamicClient, clusterClient, marketplace.VirtualWorkspaceBaseURL()),
 		}
+
+		rootAPIServerConfig.Generic.Authentication.Authenticator = union.New(
+			authentication.New(clientCfg),
+			rootAPIServerConfig.Generic.Authentication.Authenticator,
+		)
 
 		rootAPIServerConfig.Generic.Authorization.Authorizer = kcpauthorization.NewVirtualWorkspaceAuthorizer(func() []virtualrootapiserver.NamedVirtualWorkspace {
 			return rootAPIServerConfig.Extra.VirtualWorkspaces

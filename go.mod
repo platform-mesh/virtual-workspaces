@@ -15,6 +15,7 @@ require (
 	k8s.io/apimachinery v0.33.3
 	k8s.io/apiserver v0.33.2
 	k8s.io/client-go v0.33.2
+	k8s.io/klog/v2 v2.130.1
 )
 
 require (
@@ -124,7 +125,6 @@ require (
 	k8s.io/component-helpers v0.31.6 // indirect
 	k8s.io/controller-manager v0.31.6 // indirect
 	k8s.io/dynamic-resource-allocation v0.31.6 // indirect
-	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kms v0.31.6 // indirect
 	k8s.io/kube-aggregator v0.31.6 // indirect
 	k8s.io/kube-openapi v0.0.0-20241105132330-32ad38e42d3f // indirect
