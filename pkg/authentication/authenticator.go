@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
 
+	"github.com/platform-mesh/virtual-workspaces/pkg/storage"
 	"k8s.io/apiserver/pkg/authentication/authenticator"
 	"k8s.io/apiserver/pkg/authentication/request/bearertoken"
-	"k8s.io/apiserver/pkg/authentication/request/union"
 	"k8s.io/apiserver/pkg/authentication/user"
 	"k8s.io/client-go/rest"
 )
@@ -17,6 +16,7 @@ import (
 func New(restCfg *rest.Config) authenticator.Request {
 	cfg := rest.CopyConfig(restCfg)
 
+	// disable cert/key data so that we do not use client certs for authentication
 	cfg.CertData = nil
 	cfg.KeyData = nil
 
@@ -30,22 +30,19 @@ func New(restCfg *rest.Config) authenticator.Request {
 		panic(err)
 	}
 
-	return union.NewFailOnError(
-		WorkspaceAuthenticator,
-		bearertoken.New(
-			OIDCAuthenticator(client, fmt.Sprintf("%s://%s", parsedURL.Scheme, parsedURL.Host)),
-		),
+	return bearertoken.New(
+		OIDCAuthenticator(client, fmt.Sprintf("%s://%s", parsedURL.Scheme, parsedURL.Host)),
 	)
 }
 
 func OIDCAuthenticator(client *http.Client, baseURL string) authenticator.Token {
 	return authenticator.TokenFunc(func(ctx context.Context, token string) (*authenticator.Response, bool, error) {
-		clusterPath, ok := ctx.Value(clusterPath{}).(string)
+		clusterPath, ok := storage.ClusterPathFrom(ctx)
 		if !ok {
 			return &authenticator.Response{}, false, fmt.Errorf("no cluster path in context")
 		}
 
-		requestURL := fmt.Sprintf("%s/clusters/%s/version", baseURL, clusterPath)
+		requestURL := fmt.Sprintf("%s/clusters/%s/version", baseURL, clusterPath.String())
 
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, requestURL, http.NoBody)
 		if err != nil {
@@ -77,30 +74,3 @@ func OIDCAuthenticator(client *http.Client, baseURL string) authenticator.Token 
 		}
 	})
 }
-
-type clusterPath struct{}
-
-var WorkspaceAuthenticator = authenticator.RequestFunc(func(req *http.Request) (*authenticator.Response, bool, error) {
-	segments := strings.Split(req.URL.Path, "/")
-
-	idx := -1
-	for i, segment := range segments {
-		if segment != "clusters" {
-			continue
-		}
-
-		if idx > -1 {
-			return &authenticator.Response{}, false, fmt.Errorf("malformed request URL %q", req.URL.Path)
-		}
-
-		idx = i
-	}
-
-	if idx == -1 || idx+1 >= len(segments) {
-		return &authenticator.Response{}, false, fmt.Errorf("no cluster path in request URL %q", req.URL.Path)
-	}
-
-	*req = *req.WithContext(context.WithValue(req.Context(), clusterPath{}, segments[idx+1]))
-
-	return &authenticator.Response{}, false, nil
-})
