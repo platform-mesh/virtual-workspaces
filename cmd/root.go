@@ -47,7 +47,6 @@ func init() {
 	klogFlagSet := flag.NewFlagSet("klog", flag.ExitOnError)
 	klog.InitFlags(klogFlagSet)
 
-	klogFlagSet.Set("logtostderr", "true")
 	pflag.CommandLine.AddGoFlagSet(klogFlagSet)
 	rootCmd.PersistentFlags().AddGoFlagSet(klogFlagSet)
 }

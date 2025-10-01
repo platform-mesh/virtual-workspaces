@@ -20,12 +20,12 @@ func New(restCfg *rest.Config) authenticator.Request {
 	cfg.CertData = nil
 	cfg.KeyData = nil
 
-	client, err := rest.HTTPClientFor(restCfg)
+	client, err := rest.HTTPClientFor(cfg)
 	if err != nil {
 		panic(err)
 	}
 
-	parsedURL, err := url.Parse(restCfg.Host)
+	parsedURL, err := url.Parse(cfg.Host)
 	if err != nil {
 		panic(err)
 	}
@@ -55,6 +55,7 @@ func OIDCAuthenticator(client *http.Client, baseURL string) authenticator.Token 
 		if err != nil {
 			return nil, false, err
 		}
+		defer res.Body.Close() //nolint:errcheck
 
 		switch res.StatusCode {
 		case http.StatusOK, http.StatusCreated, http.StatusForbidden:
