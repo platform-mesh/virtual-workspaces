@@ -22,6 +22,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/klog/v2"
 
 	kerrors "k8s.io/apimachinery/pkg/api/errors"
 
@@ -58,6 +59,7 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 
 			path, ok := ClusterPathFrom(ctx)
 			if !ok {
+				klog.Error("cluster path not found in context")
 				return nil, kerrors.NewBadRequest("cluster path not found in context")
 			}
 
@@ -70,23 +72,31 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 				return nil, err
 			}
 
-			parentPath, _ := path.Parent()
+			parentPath, ok := path.Parent()
+			if !ok {
+				klog.ErrorS(kerrors.NewBadRequest("parent cluster path not found"), "path", path)
+				return nil, kerrors.NewBadRequest("parent cluster path not found")
+			}
 
 			entityType := cfg.AccountEntityName
 			if strings.HasSuffix(parentPath.String(), "orgs") {
 				entityType = cfg.MainEntityName
 			}
 
+			klog.V(8).InfoS("using entity type", "entityType", entityType)
+
 			err = apiBindings.EachListItem(func(o runtime.Object) error {
 				binding := o.(*unstructured.Unstructured)
 
 				apiExportName, ok, err := unstructured.NestedString(binding.Object, "spec", "reference", "export", "name")
 				if err != nil || !ok {
+					klog.ErrorS(err, "failed to get apiExportName from apibinding", "binding", binding.GetName())
 					return err
 				}
 
 				apiExportWorkspacePath, ok, err := unstructured.NestedString(binding.Object, "status", "apiExportClusterName")
 				if err != nil || !ok {
+					klog.ErrorS(err, "failed to get apiExportWorkspacePath from apibinding", "binding", binding.GetName())
 					return err
 				}
 
@@ -106,6 +116,7 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 				}
 
 				if err != nil {
+					klog.ErrorS(err, "failed to list contentconfigurations from apiexport", "export", apiExportName, "workspace", apiExportWorkspacePath)
 					return err
 				}
 
@@ -128,6 +139,7 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 
 			providerCCs, err := delegateLister.List(providerCtx, providerOpts)
 			if err != nil {
+				klog.ErrorS(err, "failed to list contentconfigurations from provider workspace", "workspace", providerWorkspaceID)
 				return nil, err
 			}
 
