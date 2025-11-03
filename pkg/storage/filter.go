@@ -263,6 +263,10 @@ func Marketplace(ctx context.Context, cfg config.ServiceConfig, dynamicClient dy
 						return err
 					}
 
+					if len(export.Spec.LatestResourceSchemas) == 0 {
+						return nil
+					}
+
 					idx := slices.IndexFunc(installedAPIBindings.Items, func(item apisv1alpha1.APIBinding) bool {
 						return item.Spec.Reference.Export.Name == export.Name &&
 							item.Status.APIExportClusterName == export.Annotations["kcp.io/cluster"]
