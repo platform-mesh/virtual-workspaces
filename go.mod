@@ -9,7 +9,7 @@ require (
 	github.com/kcp-dev/sdk v0.29.0
 	github.com/platform-mesh/extension-manager-operator/api v0.0.7
 	github.com/spf13/cobra v1.9.1
-	github.com/spf13/pflag v1.0.6
+	github.com/spf13/pflag v1.0.10
 	github.com/spf13/viper v1.20.1
 	k8s.io/apiextensions-apiserver v0.33.5
 	k8s.io/apimachinery v0.33.5
