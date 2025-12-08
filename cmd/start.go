@@ -17,7 +17,7 @@ import (
 	genericapiserver "k8s.io/apiserver/pkg/server"
 
 	virtualrootapiserver "github.com/kcp-dev/kcp/pkg/virtual/framework/rootapiserver"
-	kcpclientset "github.com/kcp-dev/kcp/sdk/client/clientset/versioned/cluster"
+	kcpclientset "github.com/kcp-dev/sdk/client/clientset/versioned/cluster"
 )
 
 var startCmd = &cobra.Command{

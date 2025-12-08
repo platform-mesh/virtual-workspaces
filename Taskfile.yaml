@@ -3,8 +3,6 @@ version: "3"
 vars:
   LOCAL_BIN: bin
   CONTROLLER_TOOLS_VERSION: v0.18.0
-  ENVTEST_K8S_VERSION: "1.31.0"
-  ENVTEST_VERSION: release-0.19
   CRD_DIRECTORY: config/crd/bases
   KCP_APIGEN_VERSION: v0.27.1
   GOARCH:
@@ -23,7 +21,7 @@ tasks:
   setup:kcp-api-gen:
     internal: true
     cmds:
-      - test -s {{.LOCAL_BIN}}/apigen || GOBIN=$(pwd)/{{.LOCAL_BIN}} go install github.com/kcp-dev/kcp/sdk/cmd/apigen@{{.KCP_APIGEN_VERSION}}
+      - test -s {{.LOCAL_BIN}}/apigen || GOBIN=$(pwd)/{{.LOCAL_BIN}} go install github.com/kcp-dev/sdk/cmd/apigen@{{.KCP_APIGEN_VERSION}}
   ## Development
   manifests:
     deps: [setup:controller-gen,setup:kcp-api-gen]
