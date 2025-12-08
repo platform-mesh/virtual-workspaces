@@ -1,7 +1,7 @@
 package v1alpha1
 
 import (
-	apisv1alpha1 "github.com/kcp-dev/kcp/sdk/apis/apis/v1alpha1"
+	apisv1alpha1 "github.com/kcp-dev/sdk/apis/apis/v1alpha1"
 	extensionapiv1alpha1 "github.com/platform-mesh/extension-manager-operator/api/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
