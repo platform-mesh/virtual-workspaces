@@ -168,7 +168,7 @@ replace (
 	k8s.io/kubernetes => github.com/kcp-dev/kubernetes v0.0.0-20250313100806-0011b8c72acd
 	k8s.io/metrics => github.com/kcp-dev/kubernetes/staging/src/k8s.io/metrics v0.0.0-20250425143807-ddbe171670d8
 	k8s.io/mount-utils => github.com/kcp-dev/kubernetes/staging/src/k8s.io/mount-utils v0.0.0-20250425143807-ddbe171670d8
-	k8s.io/pod-security-admission => github.com/kcp-dev/kubernetes/staging/src/k8s.io/pod-security-admission v0.0.0-20250313100806-0011b8c72acd
+	k8s.io/pod-security-admission => github.com/kcp-dev/kubernetes/staging/src/k8s.io/pod-security-admission f038ec6bf609
 	k8s.io/sample-apiserver => github.com/kcp-dev/kubernetes/staging/src/k8s.io/sample-apiserver v0.0.0-20250313100806-0011b8c72acd
 	k8s.io/sample-cli-plugin => github.com/kcp-dev/kubernetes/staging/src/k8s.io/sample-cli-plugin v0.0.0-20250313100806-0011b8c72acd
 	k8s.io/sample-controller => github.com/kcp-dev/kubernetes/staging/src/k8s.io/sample-controllerd v0.0.0-20250313100806-0011b8c72acd
