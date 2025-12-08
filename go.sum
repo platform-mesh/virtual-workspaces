@@ -188,8 +188,8 @@ github.com/pelletier/go-toml/v2 v2.2.4 h1:mye9XuhQ6gvn5h28+VilKrrPoQVanw5PMw/TB0
 github.com/pelletier/go-toml/v2 v2.2.4/go.mod h1:2gIqNv+qfxSVS7cM2xJQKtLSTLUE9V8t9Stt+h56mCY=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
-github.com/platform-mesh/extension-manager-operator/api v0.2.179 h1:Kq8wsZDYV86Sj8qitRTSllcj93fgNj9HqGc8iD2hyVE=
-github.com/platform-mesh/extension-manager-operator/api v0.2.179/go.mod h1:pBgrIb5Ip25mDgddAQPC5Ffeq2QuYaQfj/kwWrrjIas=
+github.com/platform-mesh/extension-manager-operator/api v0.2.180 h1:7P5IEci2uKZBCi+IaeCo3YnX9LIvIhY1ZA8g04S8nNU=
+github.com/platform-mesh/extension-manager-operator/api v0.2.180/go.mod h1:pBgrIb5Ip25mDgddAQPC5Ffeq2QuYaQfj/kwWrrjIas=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 h1:Jamvg5psRIccs7FGNTlIRMkT8wgtp5eCXdBlqhYGL6U=
 github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
