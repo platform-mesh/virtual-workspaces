@@ -142,7 +142,7 @@ require (
 )
 
 replace (
-	k8s.io/api => github.com/kcp-dev/kubernetes/staging/src/k8s.io/api v0.0.0-20251113163256-f038ec6bf609
+	k8s.io/api => github.com/kcp-dev/kubernetes/staging/src/k8s.io/api 4b3495fdcb9d
 	k8s.io/apiextensions-apiserver => github.com/kcp-dev/kubernetes/staging/src/k8s.io/apiextensions-apiserver v0.0.0-20251113163256-f038ec6bf609
 	k8s.io/apimachinery => github.com/kcp-dev/kubernetes/staging/src/k8s.io/apimachinery v0.0.0-20251113163256-f038ec6bf609
 	k8s.io/apiserver => github.com/kcp-dev/kubernetes/staging/src/k8s.io/apiserver v0.0.0-20251113163256-f038ec6bf609
