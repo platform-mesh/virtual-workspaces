@@ -43,6 +43,23 @@ func ClusterPathFrom(ctx context.Context) (logicalcluster.Path, bool) {
 	return path, true
 }
 
+func contentConfigurationWithResult(cc *unstructured.UnstructuredList) []unstructured.Unstructured {
+
+	// TODO: this works with unstructed and breaks on api changes, maybe we parse into typed structs instead
+	var results []unstructured.Unstructured
+	for _, cc := range cc.Items {
+		_, hasField, err := unstructured.NestedFieldNoCopy(cc.Object, "status", "configurationResult")
+		if err != nil || !hasField {
+			klog.V(8).Info(err, "failed to get configurationResult from contentconfiguration", "cc", cc.GetName())
+			continue
+		}
+
+		results = append(results, cc)
+	}
+
+	return results
+}
+
 func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.ServiceConfig, providerWorkspaceID string) forwardingregistry.StorageWrapper {
 
 	return forwardingregistry.StorageWrapperFunc(func(resource schema.GroupResource, storage *forwardingregistry.StoreFuncs) {
@@ -56,6 +73,7 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 			}
 
 			ul, _ := result.(*unstructured.UnstructuredList)
+			ul.Items = contentConfigurationWithResult(ul)
 
 			path, ok := ClusterPathFrom(ctx)
 			if !ok {
@@ -120,7 +138,7 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 					return err
 				}
 
-				ul.Items = append(ul.Items, apiExportCCs.(*unstructured.UnstructuredList).Items...)
+				ul.Items = append(ul.Items, contentConfigurationWithResult(apiExportCCs.(*unstructured.UnstructuredList))...)
 
 				return nil
 			})
@@ -143,7 +161,7 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 				return nil, err
 			}
 
-			ul.Items = append(ul.Items, providerCCs.(*unstructured.UnstructuredList).Items...)
+			ul.Items = append(ul.Items, contentConfigurationWithResult(providerCCs.(*unstructured.UnstructuredList))...)
 
 			return ul, nil
 		}
