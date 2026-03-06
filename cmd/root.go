@@ -2,20 +2,16 @@ package cmd
 
 import (
 	"flag"
-	"log"
-	"strings"
 
 	"github.com/platform-mesh/virtual-workspaces/pkg/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
 	genericapiserveroptions "k8s.io/apiserver/pkg/server/options"
 	"k8s.io/klog/v2"
 )
 
 var (
-	v                              *viper.Viper
-	cfg                            config.ServiceConfig
+	cfg                            = config.NewServiceConfig()
 	secureServing                  = genericapiserveroptions.SecureServingOptions{}
 	delegatingAuthenticationOption = genericapiserveroptions.DelegatingAuthenticationOptions{}
 )
@@ -26,18 +22,8 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	v = viper.NewWithOptions(
-		viper.EnvKeyReplacer(strings.NewReplacer("-", "_")),
-	)
-
-	v.AutomaticEnv()
-
 	rootCmd.AddCommand(startCmd)
-
-	err := config.BindConfigToFlags(v, startCmd, &cfg)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	cfg.AddFlags(startCmd.Flags())
 
 	delegatingAuthenticationOption = *genericapiserveroptions.NewDelegatingAuthenticationOptions()
 
