@@ -66,8 +66,23 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 		delegateLister := storage.ListerFunc
 		storage.ListerFunc = func(ctx context.Context, options *internalversion.ListOptions) (runtime.Object, error) {
 
-			// This lists the current workspace's objects
-			result, err := delegateLister.List(ctx, options)
+			// Exclude CCs with content-for label from the current workspace.
+			// These are provider-published CCs projected via APIBindings and will be
+			// fetched from their source export workspaces below with proper filtering.
+			localOpts := options.DeepCopy()
+			noContentFor, err := labels.Parse(fmt.Sprintf("!%s", cfg.ContentForLabel))
+			if err != nil {
+				return nil, err
+			}
+			if localOpts.LabelSelector != nil {
+				reqs, selectable := localOpts.LabelSelector.Requirements()
+				if selectable {
+					noContentFor = noContentFor.Add(reqs...)
+				}
+			}
+			localOpts.LabelSelector = noContentFor
+
+			result, err := delegateLister.List(ctx, localOpts)
 			if err != nil {
 				return nil, err
 			}
