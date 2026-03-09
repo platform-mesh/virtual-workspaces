@@ -70,15 +70,16 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 			// These are provider-published CCs projected via APIBindings and will be
 			// fetched from their source export workspaces below with proper filtering.
 			localOpts := options.DeepCopy()
-			noContentFor, err := labels.Parse(fmt.Sprintf("!%s", cfg.ContentForLabel))
+			noContentFor, err := labels.Parse("!" + cfg.ContentForLabel)
 			if err != nil {
 				return nil, err
 			}
 			if localOpts.LabelSelector != nil {
 				reqs, selectable := localOpts.LabelSelector.Requirements()
-				if selectable {
-					noContentFor = noContentFor.Add(reqs...)
+				if !selectable {
+					return &unstructured.UnstructuredList{}, nil
 				}
+				noContentFor = noContentFor.Add(reqs...)
 			}
 			localOpts.LabelSelector = noContentFor
 
