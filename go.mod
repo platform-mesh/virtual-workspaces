@@ -147,7 +147,7 @@ replace (
 	k8s.io/cloud-provider => github.com/kcp-dev/kubernetes/staging/src/k8s.io/cloud-provider v0.0.0-20251216144411-4b3495fdcb9d
 	k8s.io/cluster-bootstrap => github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20251216144411-4b3495fdcb9d
 	k8s.io/code-generator => github.com/kcp-dev/kubernetes/staging/src/k8s.io/code-generator v0.0.0-20251216144411-4b3495fdcb9d
-	k8s.io/component-base => github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20251216144411-4b3495fdcb9d
+	k8s.io/component-base => github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base 228ac1412525
 	k8s.io/component-helpers => github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20251216144411-4b3495fdcb9d
 	k8s.io/controller-manager => github.com/kcp-dev/kubernetes/staging/src/k8s.io/controller-manager v0.0.0-20251216144411-4b3495fdcb9d
 	k8s.io/cri-api => github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-api v0.0.0-20251216144411-4b3495fdcb9d
