@@ -21,3 +21,9 @@ jobs:
       coverageThresholdTotal: 0
       coverageThresholdFile: 0
       coverageThresholdPackage: 0
+  quality-gate:
+    permissions: {}
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: echo "OK"
