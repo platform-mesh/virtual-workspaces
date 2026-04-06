@@ -267,12 +267,32 @@ func Marketplace(ctx context.Context, cfg config.ServiceConfig, dynamicClient dy
 			var results unstructured.UnstructuredList
 			results.SetGroupVersionKind(v1alpha1.GroupVersion.WithKind("MarketplaceEntryList"))
 
+			// Determine workspace scope for provider filtering
+			var requestedScope string
+			if path, ok := ClusterPathFrom(ctx); ok {
+				if parentPath, hasParent := path.Parent(); hasParent {
+					if strings.HasSuffix(parentPath.String(), "orgs") {
+						requestedScope = "org"
+					} else {
+						requestedScope = "account"
+					}
+				}
+			}
+
 			err = providers.EachListItem(func(o runtime.Object) error {
 
 				var provider extensionapiv1alpha1.ProviderMetadata
 				err := runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &provider)
 				if err != nil {
 					return err
+				}
+
+				// Scope filtering: skip providers that don't match the current workspace level.
+				// No label means show everywhere (backward compatible).
+				if providerScope := provider.GetLabels()[cfg.MarketplaceScopeLabel]; providerScope != "" && requestedScope != "" {
+					if providerScope != requestedScope {
+						return nil
+					}
 				}
 
 				rawExports, err := resourceClient.Cluster(logicalcluster.Wildcard).Resource(
