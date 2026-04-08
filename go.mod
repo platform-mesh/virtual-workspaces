@@ -4,7 +4,7 @@ go 1.24.4
 
 require (
 	github.com/kcp-dev/client-go v0.30.0
-	github.com/kcp-dev/kcp v0.30.0
+	github.com/kcp-dev/kcp v0.30.3
 	github.com/kcp-dev/logicalcluster/v3 v3.0.5
 	github.com/kcp-dev/sdk v0.30.0
 	github.com/platform-mesh/extension-manager-operator/api v0.4.9
