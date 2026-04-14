@@ -20,6 +20,23 @@
 - `pkg/config`: runtime configuration handling.
 - `config/crd`, `config/resources`: generated resource output.
 
+## Architecture
+This repo is a KCP virtual workspace server. Most changes affect request routing, authn/authz, or storage-backed API behavior.
+
+### Runtime model
+- `cmd/start.go` builds a `virtualrootapiserver` and registers two named virtual workspaces: `contentconfigurations` and `marketplace`.
+- Authentication is layered: the default delegating authenticator is wrapped with a custom bearer-token authenticator from `pkg/authentication`.
+- Authorization is set with KCP's virtual workspace authorizer plus per-workspace attribute handling.
+
+### Virtual workspace model
+- `pkg/contentconfiguration/server.go` bootstraps a dynamic virtual workspace from an APIResourceSchema fetched from KCP and proxies requests into storage-backed content configuration data.
+- `pkg/marketplace/server.go` bootstraps a second dynamic virtual workspace from an embedded/generated resource schema and marketplace-specific storage filtering.
+- Both workspaces rely on cluster-path resolution and proxy/storage helpers; path handling bugs can affect every request.
+
+### Authentication and authorization
+- The custom authenticator validates bearer tokens by probing the upstream KCP `/version` endpoint for the resolved cluster path.
+- Authentication success currently maps users into `system:authenticated`; authorization logic is intentionally lightweight and largely path/attribute based.
+
 ## Commands
 - `go test ./...` — default test command.
 - `go test ./... -run <name>` — narrow verification for a specific path.
@@ -55,5 +72,4 @@
 ## Human-Facing Guidance
 - Use `README.md` for local certificate setup, startup arguments, and service context.
 - Use `CONTRIBUTING.md` for contribution process, DCO, and broader developer workflow expectations.
-
 
