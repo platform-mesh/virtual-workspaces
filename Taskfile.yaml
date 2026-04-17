@@ -32,6 +32,12 @@ tasks:
       - task: manifests
       - "{{.LOCAL_BIN}}/controller-gen object paths=./..."
       - "{{.LOCAL_BIN}}/apigen --input-dir {{.CRD_DIRECTORY}} --output-dir ./config/resources"
+  fuzz:
+    desc: "Run fuzz tests with a configurable duration (default 30s per target)"
+    vars:
+      FUZZTIME: '{{.FUZZTIME | default "30s"}}'
+    cmds:
+      - go test ./api/v1alpha1/ -run=^$ -fuzz=FuzzMarketplaceEntryRoundTrip -fuzztime={{.FUZZTIME}} -count=1
   docker-build:
     cmds:
       - docker build .
