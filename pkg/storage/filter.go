@@ -306,6 +306,11 @@ func Marketplace(ctx context.Context, cfg config.ServiceConfig, dynamicClient dy
 							item.Status.APIExportClusterName == export.Annotations["kcp.io/cluster"]
 					})
 
+					var apiBindingName string
+					if idx != -1 {
+						apiBindingName = installedAPIBindings.Items[idx].Name
+					}
+
 					provider.ManagedFields = nil // clear managed fields to declutter the output
 					export.ManagedFields = nil
 
@@ -316,7 +321,7 @@ func Marketplace(ctx context.Context, cfg config.ServiceConfig, dynamicClient dy
 						Spec: v1alpha1.MarketplaceEntrySpec{
 							ProviderMetadata: *provider.DeepCopy(),
 							APIExport:        *export.DeepCopy(),
-							Installed:        idx != -1,
+							APIBindingName:   apiBindingName,
 						},
 					})
 					if err != nil {

@@ -10,8 +10,9 @@ import (
 // MarketplaceEntrySpec defines the desired state of MarketplaceEntry.
 type MarketplaceEntrySpec struct {
 
-	// Installed indicates whether the marketplace entry is currently installed in the account
-	Installed bool `json:"installed"`
+	// APIBindingName is the metadata.name of the APIBinding backing this installation.
+	// Empty means not installed.
+	APIBindingName string `json:"apiBindingName,omitempty"`
 
 	// ProviderMetadata contains metadata about the provider of the marketplace entry.
 	ProviderMetadata extensionapiv1alpha1.ProviderMetadata `json:"providerMetadata"`
