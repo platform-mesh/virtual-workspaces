@@ -4,7 +4,7 @@ vars:
   LOCAL_BIN: bin
   CONTROLLER_TOOLS_VERSION: v0.18.0
   CRD_DIRECTORY: config/crd/bases
-  KCP_APIGEN_VERSION: v0.27.1
+  KCP_APIGEN_VERSION: v0.30.0
   GOARCH:
     sh: go env GOARCH
   GOOS:
