@@ -1,6 +1,6 @@
 module github.com/platform-mesh/virtual-workspaces
 
-go 1.24.4
+go 1.26.2
 
 require (
 	github.com/kcp-dev/client-go v0.30.0
