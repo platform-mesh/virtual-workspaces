@@ -120,8 +120,8 @@ github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-202512161
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20251216144411-4b3495fdcb9d/go.mod h1:ji6LERznCQ/l4DKb74Vd/5W8Q89b7SvBen7B4AMY0Oo=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20251216144411-4b3495fdcb9d h1:CWw6cyX74P3e2PMVEjdtYwWz8WP9bWaJvhgirOE9YOM=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20251216144411-4b3495fdcb9d/go.mod h1:l7hECO13A52pGPFD+SlZJ+EGCuRoVOm0wtdDCMQQkf4=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/controller-manager v0.0.0-20251216144411-4b3495fdcb9d h1:VdmE8ON6Z1Vr0IqNnWGXHESmu1LXzx/GwzQyEOW+mME=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/controller-manager v0.0.0-20251216144411-4b3495fdcb9d/go.mod h1:r87/fGxIfARYiYYbMjR8AIOqf25GMlSSqL/F05+OIzI=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/controller-manager v0.0.0-20260430062835-b63495f6b15b h1:pn6bbNiCbEAMg2AqbXGD2WMYkAmViLji9v/VPzpsWFY=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/controller-manager v0.0.0-20260430062835-b63495f6b15b/go.mod h1:vfCQUuJBzOrQy1uB7Oz/sdb3bwfxmbuTnfBNbJC/1qc=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-api v0.0.0-20251216144411-4b3495fdcb9d h1:YjKN1PiXFn3shkrxcH+oIjZ7EBzoXJS7rKFeNBoMy+Q=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-api v0.0.0-20251216144411-4b3495fdcb9d/go.mod h1:4qVUjidMg7/Z9YGZpqIDygbkPWkg3mkS1PvOx/kpHTE=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-client v0.0.0-20251216144411-4b3495fdcb9d h1:hvRoCFg68wLQ06H2eyOwYf+H/FWgMgwFcdS+ki7VLB4=
