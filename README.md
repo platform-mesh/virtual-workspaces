@@ -4,7 +4,7 @@
 # Platform-Mesh virtual workspaces
 
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/platform-mesh/virtual-workspaces/badge)](https://scorecard.dev/viewer/?uri=github.com/platform-mesh/virtual-workspaces)
-![Build Status](https://github.com/platform-mesh/virtual-workspaces/actions/workflows/pipeline.yaml/badge.svg)
+![Build Status](https://github.com/platform-mesh/virtual-workspaces/actions/workflows/ci.yml/badge.svg)
 
 ## Description
 
