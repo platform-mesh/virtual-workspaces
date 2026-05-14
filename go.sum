@@ -126,8 +126,8 @@ github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-api v0.0.0-20260430062835-b
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-api v0.0.0-20260430062835-b63495f6b15b/go.mod h1:Cnt29u/tYl1Se1cBRL30uSZ/oJ5TaIp4sZm1xDLvcMc=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-client v0.0.0-20260430062835-b63495f6b15b h1:Wg8ZyNxh4lpn40CFsEAIg026B6cOsLfvyE7P6HWbjZ8=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cri-client v0.0.0-20260430062835-b63495f6b15b/go.mod h1:rIb5x+Hk8baBUGv4ogTGnHwS7Gi/wGI3PoU7fqe4Ba0=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/csi-translation-lib v0.0.0-20251216144411-4b3495fdcb9d h1:tO2J32wp1uxGitM3z5PW1KowCudo5fMyCTXySG/Dxdk=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/csi-translation-lib v0.0.0-20251216144411-4b3495fdcb9d/go.mod h1:yIEfKOC6kDBKmPljSFyWf3OJl6qndPa1Z8CZnvM1zAk=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/csi-translation-lib v0.0.0-20260430062835-b63495f6b15b h1:RBoA5d16ogC9Xr2YcYePNXw72RkKlpZRdVSuFVSB+nw=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/csi-translation-lib v0.0.0-20260430062835-b63495f6b15b/go.mod h1:HWVfuxeGQSDe22wWAyNSzQiNE7cwivKuCgS39VcmqHs=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/dynamic-resource-allocation v0.0.0-20251216144411-4b3495fdcb9d h1:sKN7PrYHnAp8xO8FQVD6gRFbU0DyA+PJJHFuWOa4kuk=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/dynamic-resource-allocation v0.0.0-20251216144411-4b3495fdcb9d/go.mod h1:ScEkH9zs6QurmNvJvTPTbs1BbrUH6PBMrvT1qKee6U4=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/endpointslice v0.0.0-20251216144411-4b3495fdcb9d h1:7djQqCV5Hy/MN2YjcdbFe++ontvwLbr0CKPwqBaP3v4=
