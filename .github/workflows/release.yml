@@ -19,10 +19,10 @@ concurrency:
 
 jobs:
   lint:
-    uses: platform-mesh/.github/.github/workflows/job-golang-lint.yml@main
+    uses: platform-mesh/.github/.github/workflows/job-golang-lint.yml@9ddacafbe3260312cb1cc3f9974ad2fece8effe0
 
   test:
-    uses: platform-mesh/.github/.github/workflows/job-golang-test-source.yml@main
+    uses: platform-mesh/.github/.github/workflows/job-golang-test-source.yml@9ddacafbe3260312cb1cc3f9974ad2fece8effe0
     secrets: inherit
     with:
       coverageThresholdFile: 0
@@ -30,12 +30,12 @@ jobs:
       coverageThresholdTotal: 0
 
   create-version:
-    uses: platform-mesh/.github/.github/workflows/job-create-version.yml@main
+    uses: platform-mesh/.github/.github/workflows/job-create-version.yml@9ddacafbe3260312cb1cc3f9974ad2fece8effe0
     secrets: inherit
 
   docker-build-push:
     needs: [create-version, lint, test]
-    uses: platform-mesh/.github/.github/workflows/job-docker-build-push.yml@main
+    uses: platform-mesh/.github/.github/workflows/job-docker-build-push.yml@9ddacafbe3260312cb1cc3f9974ad2fece8effe0
     with:
       imageTagName: ghcr.io/platform-mesh/virtual-workspaces
       version: ${{ needs.create-version.outputs.version }}
@@ -44,7 +44,7 @@ jobs:
 
   update-version:
     needs: [create-version, docker-build-push]
-    uses: platform-mesh/.github/.github/workflows/job-chart-version-update.yml@main
+    uses: platform-mesh/.github/.github/workflows/job-chart-version-update.yml@9ddacafbe3260312cb1cc3f9974ad2fece8effe0
     secrets: inherit
     with:
       appVersion: ${{ needs.create-version.outputs.version }}
@@ -53,13 +53,13 @@ jobs:
 
   sbom:
     needs: [create-version, docker-build-push]
-    uses: platform-mesh/.github/.github/workflows/job-sbom.yml@main
+    uses: platform-mesh/.github/.github/workflows/job-sbom.yml@9ddacafbe3260312cb1cc3f9974ad2fece8effe0
     with:
       imageReference: ghcr.io/platform-mesh/virtual-workspaces:${{ needs.create-version.outputs.version }}
 
   image-ocm:
     needs: [create-version, docker-build-push, sbom]
-    uses: platform-mesh/.github/.github/workflows/job-image-ocm.yml@main
+    uses: platform-mesh/.github/.github/workflows/job-image-ocm.yml@9ddacafbe3260312cb1cc3f9974ad2fece8effe0
     secrets: inherit
     with:
       imageReference: ghcr.io/platform-mesh/virtual-workspaces:${{ needs.create-version.outputs.version }}
