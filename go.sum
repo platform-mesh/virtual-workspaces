@@ -140,8 +140,8 @@ github.com/kcp-dev/kubernetes/staging/src/k8s.io/kms v0.0.0-20260430062835-b6349
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/kms v0.0.0-20260430062835-b63495f6b15b/go.mod h1:VT+4ekZAdrZDMgShK37vvlyHUVhwI9t/9tvh0AyCWmQ=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/kube-aggregator v0.0.0-20251216144411-4b3495fdcb9d h1:MuSqL8tqlEpBQjDnkHIhKxfC6mE7KAVlywXi6hSRUK4=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/kube-aggregator v0.0.0-20251216144411-4b3495fdcb9d/go.mod h1:GOPdnpyxb2xGzTzBC7NOr0rpnWcGH8/pY/tPHX0Ou44=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/kubelet v0.0.0-20251216144411-4b3495fdcb9d h1:V695w7ZtHCdyM01jl5BU2frkzdJNH5GF2Ce3yM3vLt0=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/kubelet v0.0.0-20251216144411-4b3495fdcb9d/go.mod h1:5xnzJEi0iAetJLsqhsO5yMAnW3yPZ+zs32oh4VAKgc0=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/kubelet v0.0.0-20260430062835-b63495f6b15b h1:6jPSsyXp65L6lPDGAcMIZZwRs0ynciGEF0+xZtdWwT8=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/kubelet v0.0.0-20260430062835-b63495f6b15b/go.mod h1:yyYM+fSElQfRmh6rhfpOLXA85nM05NvCQj1voOQPaFM=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/mount-utils v0.0.0-20251216144411-4b3495fdcb9d h1:IyKGBxh0tjYuDdigR99DTLeDDPw02jkLQ/lVwLd2pkY=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/mount-utils v0.0.0-20251216144411-4b3495fdcb9d/go.mod h1:MIjjYlqJ0ziYQg0MO09kc9S96GIcMkhF/ay9MncF0GA=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/pod-security-admission v0.0.0-20251216144411-4b3495fdcb9d h1:prTuFQawKSFps5jC9k3ckE/hLPqz7iKWBPpZhhndv9Y=
