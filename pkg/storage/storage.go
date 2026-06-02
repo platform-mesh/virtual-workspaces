@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/kcp-dev/client-go/dynamic"
-	"github.com/kcp-dev/kcp/pkg/virtual/framework/dynamic/apiserver"
-	registry "github.com/kcp-dev/kcp/pkg/virtual/framework/forwardingregistry"
+	"github.com/kcp-dev/virtual-workspace-framework/pkg/dynamic/apiserver"
+	registry "github.com/kcp-dev/virtual-workspace-framework/pkg/forwardingregistry"
 	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	structuralschema "k8s.io/apiextensions-apiserver/pkg/apiserver/schema"

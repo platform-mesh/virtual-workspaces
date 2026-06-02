@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/kcp-dev/kcp/pkg/server/filters"
-	"github.com/kcp-dev/kcp/pkg/virtual/framework"
 	"github.com/kcp-dev/logicalcluster/v3"
+	"github.com/kcp-dev/virtual-workspace-framework/framework"
 	"github.com/platform-mesh/virtual-workspaces/pkg/authorization"
 	"github.com/platform-mesh/virtual-workspaces/pkg/proxy"
 	"github.com/platform-mesh/virtual-workspaces/pkg/storage"

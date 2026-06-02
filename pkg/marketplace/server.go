@@ -5,12 +5,13 @@ import (
 	"path"
 
 	"github.com/kcp-dev/client-go/dynamic"
-	"github.com/kcp-dev/kcp/pkg/virtual/framework"
-	virtualworkspacesdynamic "github.com/kcp-dev/kcp/pkg/virtual/framework/dynamic"
-	kcpapidefinition "github.com/kcp-dev/kcp/pkg/virtual/framework/dynamic/apidefinition"
-	virtualrootapiserver "github.com/kcp-dev/kcp/pkg/virtual/framework/rootapiserver"
+	"github.com/kcp-dev/multicluster-provider/apiexport"
 	apisv1alpha1 "github.com/kcp-dev/sdk/apis/apis/v1alpha1"
 	kcpclientset "github.com/kcp-dev/sdk/client/clientset/versioned/cluster"
+	"github.com/kcp-dev/virtual-workspace-framework/framework"
+	virtualworkspacesdynamic "github.com/kcp-dev/virtual-workspace-framework/pkg/dynamic"
+	kcpapidefinition "github.com/kcp-dev/virtual-workspace-framework/pkg/dynamic/apidefinition"
+	virtualrootapiserver "github.com/kcp-dev/virtual-workspace-framework/pkg/rootapiserver"
 	"github.com/platform-mesh/virtual-workspaces/config/resources"
 	"github.com/platform-mesh/virtual-workspaces/pkg/apidefinition"
 	"github.com/platform-mesh/virtual-workspaces/pkg/authorization"
@@ -39,6 +40,7 @@ func BuildVirtualWorkspace(
 	dynamicClient dynamic.ClusterInterface,
 	kcpClusterClient kcpclientset.ClusterInterface,
 	virtualWorkspaceBaseURL string,
+	provider *apiexport.Provider,
 ) virtualrootapiserver.NamedVirtualWorkspace {
 
 	clusterResolver := proxy.NewClusterResolver(kcpClusterClient)
@@ -66,10 +68,7 @@ func BuildVirtualWorkspace(
 					return nil, err
 				}
 
-				marketplaceFilter, err := storage.Marketplace(ctx, cfg, dynamicClient)
-				if err != nil {
-					return nil, err
-				}
+				marketplaceFilter := storage.Marketplace(provider, cfg)
 
 				storeageProvider := storage.CreateStorageProviderFunc(
 					dynamicClient,
