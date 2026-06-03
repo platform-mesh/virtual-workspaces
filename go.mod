@@ -1,6 +1,6 @@
 module github.com/platform-mesh/virtual-workspaces
 
-go 1.26.0
+go 1.26.2
 
 require (
 	github.com/kcp-dev/client-go v0.31.2
@@ -44,7 +44,6 @@ require (
 	github.com/fxamacker/cbor/v2 v2.9.1 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
-	github.com/go-logr/zapr v1.3.0 // indirect
 	github.com/go-openapi/jsonpointer v0.23.1 // indirect
 	github.com/go-openapi/jsonreference v0.21.5 // indirect
 	github.com/go-openapi/swag v0.26.0 // indirect
