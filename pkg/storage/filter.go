@@ -196,12 +196,10 @@ func Marketplace(provider *apiexport.Provider, cfg config.ServiceConfig) forward
 			}
 
 			// Get APIBindings for this specific cluster
-			var installedAPIBindings apisv1alpha1.APIBindingList
-			bindingList := &apisv1alpha1.APIBindingList{}
-			if err := cl.GetClient().List(ctx, bindingList); err != nil {
+			installedAPIBindings := &apisv1alpha1.APIBindingList{}
+			if err := cl.GetClient().List(ctx, installedAPIBindings); err != nil {
 				return nil, fmt.Errorf("failed to list apibindings: %w", err)
 			}
-			installedAPIBindings.Items = bindingList.Items
 
 			lister := provider.Lister()
 
@@ -227,7 +225,7 @@ func Marketplace(provider *apiexport.Provider, cfg config.ServiceConfig) forward
 
 				for _, export := range exportList.Items {
 					if len(export.Spec.LatestResourceSchemas) == 0 {
-						return nil, fmt.Errorf("apiexport %s for provider %s has no resource schemas", export.Name, provider.GetName())
+						continue
 					}
 
 					idx := slices.IndexFunc(installedAPIBindings.Items, func(item apisv1alpha1.APIBinding) bool {
