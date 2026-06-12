@@ -3,17 +3,19 @@ package storage
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"slices"
 	"strings"
 
 	"github.com/kcp-dev/client-go/dynamic"
-	"github.com/kcp-dev/kcp/pkg/virtual/framework/forwardingregistry"
 	"github.com/kcp-dev/logicalcluster/v3"
+	"github.com/kcp-dev/multicluster-provider/apiexport"
 	apisv1alpha1 "github.com/kcp-dev/sdk/apis/apis/v1alpha1"
+	"github.com/kcp-dev/virtual-workspace-framework/pkg/forwardingregistry"
 	extensionapiv1alpha1 "github.com/platform-mesh/extension-manager-operator/api/v1alpha1"
 	"github.com/platform-mesh/virtual-workspaces/api/v1alpha1"
 	"github.com/platform-mesh/virtual-workspaces/pkg/config"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/multicluster-runtime/pkg/multicluster"
 
 	"k8s.io/apimachinery/pkg/apis/meta/internalversion"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -21,7 +23,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/klog/v2"
 
 	kerrors "k8s.io/apimachinery/pkg/api/errors"
@@ -184,121 +185,47 @@ func ContentConfigurationLookup(client dynamic.ClusterInterface, cfg config.Serv
 	})
 }
 
-func setupVirtualWorkspaceClient(ctx context.Context, dynamicClient dynamic.ClusterInterface, kubeconfigPath, serverURL, endpointSliceWorkspace, endpointSliceName string) (*dynamic.ClusterClientset, error) {
-
-	res, err := dynamicClient.Cluster(logicalcluster.NewPath(endpointSliceWorkspace)).Resource(schema.GroupVersionResource{
-		Group:    "apis.kcp.io",
-		Version:  "v1alpha1",
-		Resource: "apiexportendpointslices",
-	}).Get(ctx, endpointSliceName, metav1.GetOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	var eps apisv1alpha1.APIExportEndpointSlice
-	err = runtime.DefaultUnstructuredConverter.FromUnstructured(res.Object, &eps)
-	if err != nil {
-		return nil, err
-	}
-
-	clientCfg, err := clientcmd.BuildConfigFromFlags("", kubeconfigPath)
-	if err != nil {
-		return nil, err
-	}
-
-	clientCfg.QPS = -1 // Disable rate limiting for the client
-
-	if serverURL != "" {
-		clientCfg.Host = serverURL
-	}
-
-	epsURL, _ := url.Parse(eps.Status.APIExportEndpoints[0].URL)
-
-	parsed, _ := url.Parse(clientCfg.Host)
-	parsed.Path = epsURL.Path
-
-	clientCfg.Host = parsed.String()
-
-	fmt.Println("Using APIExportEndpointSlice URL:", clientCfg.Host)
-
-	return dynamic.NewForConfig(clientCfg)
-}
-
-func Marketplace(ctx context.Context, cfg config.ServiceConfig, dynamicClient dynamic.ClusterInterface) (forwardingregistry.StorageWrapper, error) {
-	resourceClient, err := setupVirtualWorkspaceClient(ctx, dynamicClient, cfg.Kubeconfig, cfg.ServerURL, cfg.ResourceSchemaWorkspace, cfg.ResourceAPIExportEndpointSliceName)
-	if err != nil {
-		return nil, err
-	}
-
+func Marketplace(provider *apiexport.Provider, cfg config.ServiceConfig) forwardingregistry.StorageWrapper {
 	return forwardingregistry.StorageWrapperFunc(func(resource schema.GroupResource, storage *forwardingregistry.StoreFuncs) {
 		storage.ListerFunc = func(ctx context.Context, options *internalversion.ListOptions) (runtime.Object, error) {
-
-			var installedAPIBindings apisv1alpha1.APIBindingList
 			cluster := genericapirequest.ClusterFrom(ctx)
 
-			rawBindings, err := resourceClient.Cluster(cluster.Name.Path()).
-				Resource(apisv1alpha1.SchemeGroupVersion.WithResource("apibindings")).
-				List(ctx, metav1.ListOptions{})
+			cl, err := provider.Get(ctx, multicluster.ClusterName(cluster.Name.String()))
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("failed to get cluster from provider: %w", err)
 			}
 
-			err = rawBindings.EachListItem(func(o runtime.Object) error {
-				var binding apisv1alpha1.APIBinding
-				err := runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &binding)
-				if err != nil {
-					return err
-				}
-
-				installedAPIBindings.Items = append(installedAPIBindings.Items, binding)
-				return nil
-			})
-			if err != nil {
-				return nil, err
+			// Get APIBindings for this specific cluster
+			installedAPIBindings := &apisv1alpha1.APIBindingList{}
+			if err := cl.GetClient().List(ctx, installedAPIBindings); err != nil {
+				return nil, fmt.Errorf("failed to list apibindings: %w", err)
 			}
 
-			providers, err := resourceClient.Cluster(logicalcluster.Wildcard).
-				Resource(extensionapiv1alpha1.GroupVersion.WithResource("providermetadatas")).
-				List(ctx, metav1.ListOptions{})
-			if err != nil {
-				return nil, err
+			lister := provider.Lister()
+
+			var providerList extensionapiv1alpha1.ProviderMetadataList
+			if err := lister.List(ctx, &providerList); err != nil {
+				return nil, fmt.Errorf("failed to list providermetadatas: %w", err)
 			}
 
 			var results unstructured.UnstructuredList
 			results.SetGroupVersionKind(v1alpha1.GroupVersion.WithKind("MarketplaceEntryList"))
 
-			err = providers.EachListItem(func(o runtime.Object) error {
+			// For each provider, find matching APIExports across all shards
+			for _, provider := range providerList.Items {
+				exportList := &apisv1alpha1.APIExportList{}
 
-				var provider extensionapiv1alpha1.ProviderMetadata
-				err := runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &provider)
-				if err != nil {
-					return err
-				}
-
-				rawExports, err := resourceClient.Cluster(logicalcluster.Wildcard).Resource(
-					schema.GroupVersionResource{
-						Group:    apisv1alpha1.SchemeGroupVersion.Group,
-						Version:  apisv1alpha1.SchemeGroupVersion.Version,
-						Resource: "apiexports",
-					},
-				).List(ctx, metav1.ListOptions{
+				if err := lister.List(ctx, exportList, &client.ListOptions{
 					LabelSelector: labels.SelectorFromValidatedSet(map[string]string{
 						cfg.ContentForLabel: provider.GetName(),
-					}).String(),
-				})
-				if err != nil {
-					return err
+					}),
+				}); err != nil {
+					return nil, fmt.Errorf("failed to list apiexports for provider %s: %w", provider.GetName(), err)
 				}
 
-				err = rawExports.EachListItem(func(o runtime.Object) error {
-					var export apisv1alpha1.APIExport
-					err := runtime.DefaultUnstructuredConverter.FromUnstructured(o.(*unstructured.Unstructured).Object, &export)
-					if err != nil {
-						return err
-					}
-
+				for _, export := range exportList.Items {
 					if len(export.Spec.LatestResourceSchemas) == 0 {
-						return nil
+						continue
 					}
 
 					idx := slices.IndexFunc(installedAPIBindings.Items, func(item apisv1alpha1.APIBinding) bool {
@@ -325,23 +252,15 @@ func Marketplace(ctx context.Context, cfg config.ServiceConfig, dynamicClient dy
 						},
 					})
 					if err != nil {
-						return err
+						return nil, fmt.Errorf("failed to convert marketplace entry to unstructured for export %s and provider %s: %w", export.Name, provider.Name, err)
 					}
 
 					us := unstructured.Unstructured{Object: unstructuredEntry}
 					us.SetGroupVersionKind(v1alpha1.GroupVersion.WithKind("MarketplaceEntry"))
 					results.Items = append(results.Items, us)
-
-					return nil
-				})
-				if err != nil {
-					return err
 				}
-
-				return nil
-			})
-
-			return &results, err
+			}
+			return &results, nil
 		}
-	}), nil
+	})
 }
