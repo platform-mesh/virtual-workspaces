@@ -165,8 +165,8 @@ github.com/kcp-dev/kubernetes/staging/src/k8s.io/csi-translation-lib v0.0.0-2026
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/csi-translation-lib v0.0.0-20260401063412-ba4f7d493d5b/go.mod h1:HWVfuxeGQSDe22wWAyNSzQiNE7cwivKuCgS39VcmqHs=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/dynamic-resource-allocation v0.0.0-20260401063412-ba4f7d493d5b h1:fvwnAZbk9nK+W+/NE59FuH9irFrWntLMjyOpmURRjnY=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/dynamic-resource-allocation v0.0.0-20260401063412-ba4f7d493d5b/go.mod h1:Kp4mpnFsN3B35vVbKHrSxzMY8qzwrW9utaOsBGrVlIs=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/endpointslice v0.0.0-20260401063412-ba4f7d493d5b h1:X5WEmnTy+Z5qnbwmxzKMjdc4/hdgmGMx+oMMXivNzGs=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/endpointslice v0.0.0-20260401063412-ba4f7d493d5b/go.mod h1:BlOidvCjZqkOXr/FaydtgUX2bO0cRy1l48RiLlVvcDU=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/endpointslice v0.0.0-20260602065202-e006560fc76a h1:AXaRZM8fFQCBj8x5F4IpG4DjalgKeyBBuqzcBpYdKy0=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/endpointslice v0.0.0-20260602065202-e006560fc76a/go.mod h1:De+WkfnLCZkNtSg2oq2dtvOMyj3so3bC9X3y2udO38g=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/externaljwt v0.0.0-20260401063412-ba4f7d493d5b h1:/zuNYr+GbcTQXpBHxFjEY91/YWIwvYFHVkv9viF77s0=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/externaljwt v0.0.0-20260401063412-ba4f7d493d5b/go.mod h1:BbmVxkdvNrL2ukF4m/AN2D2FBD3vp2df497nfcVl2Nc=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/kms v0.0.0-20260401063412-ba4f7d493d5b h1:auSPURX6hZV849ddSANTdWed59ECWCmQ3O6+Afx37vY=
