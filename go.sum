@@ -149,8 +149,8 @@ github.com/kcp-dev/kubernetes/staging/src/k8s.io/client-go v0.0.0-20260401063412
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/client-go v0.0.0-20260401063412-ba4f7d493d5b/go.mod h1:nC64c6nHuBAQMICDgY3OfK4PpcpQCparuBsJcEB7tWc=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cloud-provider v0.0.0-20260401063412-ba4f7d493d5b h1:zBp2Pwc673JbQk55XNh0BYGXAhwzCC+6yHcvxDMEvm0=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cloud-provider v0.0.0-20260401063412-ba4f7d493d5b/go.mod h1:1w1mB4qg90PQRN2gxaYdZuSCad21TfKRKlB/aZSe9rk=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20260401063412-ba4f7d493d5b h1:3AoNmadAvRTV9thBg2fGehzjVop0ZDcGW1UoI516a4o=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20260401063412-ba4f7d493d5b/go.mod h1:eE13MxAN3iuK6+wbXawOixd+lIJCN+FC+e5Cp7xJpfs=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20260602065202-e006560fc76a h1:aCdihkz5nSGBK2DtwwlD7GsUxT+ZBVxew8Et/AXwenw=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20260602065202-e006560fc76a/go.mod h1:SCSlwafNL0dxXpoIa+ldF8ISRSDSe5OX8zkDsI7/+LU=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20260401063412-ba4f7d493d5b h1:WRodjaagbeY3Tjba7gaPngMb4kuTLh53ukmvJozbLHI=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20260401063412-ba4f7d493d5b/go.mod h1:HOrpwrIREPdoQppvSAywMPdNrMvjw9kd0ZBYLUMGI+0=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20260401063412-ba4f7d493d5b h1:IUgNcDh2O8wgxjvxDYNzpOsH8Av3y5YoBl+gQOq2vHE=
