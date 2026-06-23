@@ -151,8 +151,8 @@ github.com/kcp-dev/kubernetes/staging/src/k8s.io/cloud-provider v0.0.0-202604010
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cloud-provider v0.0.0-20260401063412-ba4f7d493d5b/go.mod h1:1w1mB4qg90PQRN2gxaYdZuSCad21TfKRKlB/aZSe9rk=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20260602065202-e006560fc76a h1:aCdihkz5nSGBK2DtwwlD7GsUxT+ZBVxew8Et/AXwenw=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/cluster-bootstrap v0.0.0-20260602065202-e006560fc76a/go.mod h1:SCSlwafNL0dxXpoIa+ldF8ISRSDSe5OX8zkDsI7/+LU=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20260401063412-ba4f7d493d5b h1:WRodjaagbeY3Tjba7gaPngMb4kuTLh53ukmvJozbLHI=
-github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20260401063412-ba4f7d493d5b/go.mod h1:HOrpwrIREPdoQppvSAywMPdNrMvjw9kd0ZBYLUMGI+0=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20260602065202-e006560fc76a h1:8lUpIx43aoxFb/jG933n+2PkcBzoxyQ8IVelbHKx1bc=
+github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-base v0.0.0-20260602065202-e006560fc76a/go.mod h1:wjqkA9Qh9xppGg3JFYxKumPI8bIYsiQqrRr062LiLgc=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20260401063412-ba4f7d493d5b h1:IUgNcDh2O8wgxjvxDYNzpOsH8Av3y5YoBl+gQOq2vHE=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/component-helpers v0.0.0-20260401063412-ba4f7d493d5b/go.mod h1:moNOpjaKZLA7e3UhARntuva07ZmmmVnPH6d2iSGsWr8=
 github.com/kcp-dev/kubernetes/staging/src/k8s.io/controller-manager v0.0.0-20260602065202-e006560fc76a h1:btQD0GNrrOB+tTQulIVuUFE0Fvwdf1V7yuYWeugxXbQ=
